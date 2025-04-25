@@ -6,20 +6,18 @@ pub fn build(b: *std.Build) void {
         .preferred_optimize_mode = .ReleaseSafe
     });
 
-    const webview = b.dependency("webview", .{});
+    const lib_webview = b.dependency("webview", .{});
 
-    const webview_trans = b.addTranslateC(.{
-        .root_source_file = webview.path("core/include/webview/webview.h"),
+    const webview = b.addTranslateC(.{
+        .root_source_file = lib_webview.path("core/include/webview/webview.h"),
         .optimize = optimize,
         .target = target,
     }).createModule();
 
-    const libquark_mod = b.addModule("webview", .{
-    // _ = b.addModule("webview", .{
-        .root_source_file = b.path("src/binding.zig")
-    // }).addImport("webview_trans", webview_trans);
+    const libquark_mod = b.addModule("libquark", .{
+        .root_source_file = b.path("src/root.zig"),
     });
-    libquark_mod.addImport("webview_trans", webview_trans);
+    libquark_mod.addImport("webview", webview);
 
     const libquark = b.addStaticLibrary(.{
         .name = "quark",
@@ -27,12 +25,12 @@ pub fn build(b: *std.Build) void {
         .optimize = optimize,
         .target = target,
     });
-    libquark.addIncludePath(webview.path("core/include/webview/"));
+    libquark.addIncludePath(lib_webview.path("core/include/webview/"));
     libquark.root_module.addCMacro("WEBVIEW_STATIC", "1");
     libquark.linkLibCpp();
     switch (@import("builtin").os.tag) {
         // .windows => {
-        //     libquark.addCSourceFile(.{ .file = webview.path("core/src/webview.cc"), .flags = &.{"-std=c++14"} });
+        //     libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++14"} });
         //     libquark.addIncludePath(b.path("external/WebView2/"));
         //     libquark.linkSystemLibrary("ole32");
         //     libquark.linkSystemLibrary("shlwapi");
@@ -42,11 +40,11 @@ pub fn build(b: *std.Build) void {
         //     libquark.linkSystemLibrary("user32");
         // },
         .macos => {
-            libquark.addCSourceFile(.{ .file = webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
+            libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             libquark.linkFramework("WebKit");
         },
         .freebsd => {
-            libquark.addCSourceFile(.{ .file = webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
+            libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/cairo/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/gtk-3.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/glib-2.0/" });
@@ -61,7 +59,7 @@ pub fn build(b: *std.Build) void {
             libquark.linkSystemLibrary("webkit2gtk-4.0");
         },
         .linux => {
-            libquark.addCSourceFile(.{ .file = webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
+            libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             libquark.linkSystemLibrary("gtk+-3.0");
             libquark.linkSystemLibrary("webkit2gtk-4.0");
         },
