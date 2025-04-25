@@ -12,5 +12,5 @@ pub fn main() !void {
     try window.dispatch(onResize, null);
     try window.setHtml("Thanks for using libquarkv3!");
     try window.run();
-    try window.destroy();
+    // try window.destroy();
 }

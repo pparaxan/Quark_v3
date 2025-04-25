@@ -25,8 +25,13 @@ pub const WebView = struct {
     }
 
     pub fn run(self: Self) WebViewError!void {
-        const code = webview_backend.webview_run(self.webview);
-        if (code != webview_backend.WEBVIEW_ERROR_OK) return mapError(code);
+        const run_backend = webview_backend.webview_run(self.webview);
+        if (run_backend != webview_backend.WEBVIEW_ERROR_OK)
+            return mapError(run_backend);
+
+        const destroy_backend = webview_backend.webview_destroy(self.webview);
+        if (destroy_backend != webview_backend.WEBVIEW_ERROR_OK)
+            return mapError(destroy_backend);
     }
 
     pub fn terminate(self: Self) WebViewError!void {
@@ -78,12 +83,6 @@ pub const WebView = struct {
         const code = webview_backend.webview_eval(self.webview, js.ptr);
         if (code != webview_backend.WEBVIEW_ERROR_OK) return mapError(code);
     }
-
-    pub fn destroy(self: Self) WebViewError!void {
-        const code = webview_backend.webview_destroy(self.webview);
-        if (code != webview_backend.WEBVIEW_ERROR_OK) return mapError(code);
-    }
-
 };
 
 fn mapError(code: webview_backend.webview_error_t) WebView.WebViewError {
