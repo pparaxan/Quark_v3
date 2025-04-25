@@ -1,0 +1,24 @@
+.{
+    .name = .quark,
+    .version = "5.0.0",
+    .fingerprint = 0xd00d6c7f4552224e,
+    .minimum_zig_version = "0.14.0",
+    .dependencies = .{
+        .webview = .{
+            .url = "https://github.com/webview/webview/archive/refs/tags/0.12.0.tar.gz",
+            .hash = "122000cad401fdc8175c1c82be38a906f0ea3c8a9e2a85f2670e5c69f224407db464",
+        },
+        // .webview2 = .{
+        //     .url = "https://nuget.org/api/v2/package/Microsoft.Web.WebView2/1.0.3179.45",
+        //     .hash = "put it here"
+        // }
+    },
+
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "LICENSE",
+        "README.md",
+    },
+}
