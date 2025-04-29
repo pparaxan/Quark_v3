@@ -7,7 +7,7 @@ fn onResize(view: libquark.WebView, _: ?*anyopaque) void {
 }
 
 pub fn main() !void {
-    var window = libquark.WebView.create(false, null);
+    var window = libquark.create(true, null);
     try window.setTitle("libquarkv3");
     try window.dispatch(onResize, null);
     try window.setHtml("Thanks for using libquarkv3!");
