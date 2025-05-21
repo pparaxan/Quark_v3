@@ -70,7 +70,7 @@ pub const WebView = struct { // const Self = @This();
 };
 
 pub fn create(debug: bool, external_window: ?*anyopaque) WebView {
-    return WebView {
+    return WebView{
         .webview = quark_webview.webview_create(@intFromBool(debug), external_window),
     };
 }
