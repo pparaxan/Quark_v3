@@ -49,19 +49,19 @@ pub fn build(b: *std.Build) void {
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/gtk-3.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/glib-2.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/lib/glib-2.0/include/" });
-            libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/webkitgtk-4.0/" });
+            libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/webkitgtk-4.1/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/pango-1.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/harfbuzz/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/gdk-pixbuf-2.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/atk-1.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/libsoup-3.0/" });
             libquark.linkSystemLibrary("gtk-3");
-            libquark.linkSystemLibrary("webkit2gtk-4.0");
+            libquark.linkSystemLibrary("webkit2gtk-4.1");
         },
         .linux => {
             libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             libquark.linkSystemLibrary("gtk+-3.0");
-            libquark.linkSystemLibrary("webkit2gtk-4.0");
+            libquark.linkSystemLibrary("webkit2gtk-4.1");
         },
         else => {
             @compileError("Unsupported operating system for libquark.");
