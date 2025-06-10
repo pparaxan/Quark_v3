@@ -13,8 +13,6 @@ pub const QuarkConfig = struct {
     height: u16 = 600,
     resizable: SizeHint = SizeHint.NONE,
     debug: bool = false,
-    html: ?[:0]const u8 = null, // deprecate this
-    url: ?[:0]const u8 = null, // [..^] and change the function name of set[Url]
 
     pub fn new() QuarkConfig {
         return QuarkConfig{};
@@ -44,21 +42,9 @@ pub const QuarkConfig = struct {
         return config;
     }
 
-    pub fn setHtml(self: QuarkConfig, html: [:0]const u8) QuarkConfig {
-        var config = self;
-        config.html = html;
-        return config;
-    }
-
     pub fn setDebug(self: QuarkConfig, debug: bool) QuarkConfig {
         var config = self;
         config.debug = debug;
-        return config;
-    }
-
-    pub fn setUrl(self: QuarkConfig, url: [:0]const u8) QuarkConfig {
-        var config = self;
-        config.url = url;
         return config;
     }
 };

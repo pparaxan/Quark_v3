@@ -5,7 +5,7 @@
 
 @font-face {
     font-family: 'Fredoka';
-    src: url('assets/Fonts/Fredoka/Fredoka.ttf');
+    src: url('quark://assets/Fonts/Fredoka/Fredoka.ttf');
     font-weight: normal;
     font-style: normal;
 }
@@ -14,7 +14,7 @@ body, html {
     height: 100%;
     margin: 0;
     font-family: 'Fredoka';
-    background-image: url('assets/Gradient.svg');
+    background-image: url('quark://assets/Gradient.svg');
     background-repeat: no-repeat;
     background-size: cover;
 }
