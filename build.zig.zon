@@ -12,6 +12,10 @@
         //     .url = "https://nuget.org/api/v2/package/Microsoft.Web.WebView2/1.0.3179.45",
         //     .hash = "put it here"
         // }
+        .binder = .{
+            .url = "https://codeberg.org/pparaxan/binder/archive/v1.0.0.zip",
+            .hash = "binder-1.0.0-KglZgaoRAADke6LA9DT_ZIXcMUyJpBkxZCHwGKJM8ZCo"
+        }
     },
 
     .paths = .{
