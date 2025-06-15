@@ -71,7 +71,7 @@ const mime_mappings = [_]MimeMapping{ // PLEASE MAKE PULL REQUESTS IF YOU HAVE A
     .{ .ext = ".tar", .mime = "application/x-tar" },
     .{ .ext = ".tif", .mime = "image/tiff" },
     .{ .ext = ".tiff", .mime = "image/tiff" },
-    .{ .ext = ".ts", .mime = "video/mp2t" },
+    .{ .ext = ".ts", .mime = "video/mp2t" }, // typescript???
     .{ .ext = ".ttf", .mime = "font/ttf" },
     .{ .ext = ".txt", .mime = "text/plain" },
     .{ .ext = ".vsd", .mime = "application/vnd.visio" },
@@ -107,7 +107,6 @@ pub fn URIMime(path: []const u8) FetchResult {
             .mimeType = "application/octet-stream",
         };
     }
-    std.debug.print("ION KNOW: {any}\n{any}", .{fileData, FetchResult});
 }
 
 pub fn URIMimeType(filename: []const u8) []const u8 {
