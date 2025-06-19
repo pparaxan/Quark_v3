@@ -13,6 +13,7 @@ pub const QuarkConfig = struct {
     height: u16 = 600,
     resizable: SizeHint = SizeHint.NONE,
     debug: bool = false,
+    frontend: [:0]const u8 = "frontend",
 
     pub fn new() QuarkConfig {
         return QuarkConfig{};
@@ -46,5 +47,15 @@ pub const QuarkConfig = struct {
         var config = self;
         config.debug = debug;
         return config;
+    }
+
+    pub fn setFrontend(self: QuarkConfig, directory: [:0]const u8) QuarkConfig {
+        var config = self;
+        config.frontend = directory;
+        return config;
+    }
+
+    pub fn getFrontendDir(self: QuarkConfig, allocator: std.mem.Allocator) ![]u8 {
+        return try std.fmt.allocPrint(allocator, "src/{s}", .{self.frontend});
     }
 };

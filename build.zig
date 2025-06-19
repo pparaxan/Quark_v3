@@ -1,5 +1,6 @@
 const std = @import("std");
 const binder = @import("binder");
+const config = @import("src/config.zig");
 
 pub fn build(b: *std.Build) !void {
     const target = b.standardTargetOptions(.{});
@@ -15,8 +16,11 @@ pub fn build(b: *std.Build) !void {
         .target = target,
     }).createModule();
 
+    const quark_config = config.QuarkConfig.new();
+    const frontend_path = try quark_config.getFrontendDir(b.allocator);
+
     const frontend = try binder.generate(b, .{
-        .source_dir = "src/frontend",
+        .source_dir = frontend_path,
         .output_file = "binder.zig",
         .namespace = "quark_frontend",
     });

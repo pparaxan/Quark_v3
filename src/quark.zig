@@ -22,7 +22,7 @@ pub const Quark = struct {
         try checkError(quark_webview.webview_set_title(quark.webview, quark_config.title));
         try uri_protocol.URIProtocol(&quark);
 
-        const html = frontend.get("index.html") orelse @panic("Missing entrypoint: src/frontend/index.html");
+        const html = frontend.get("index.html") orelse @panic("Missing entrypoint: src/<frontend>/index.html");
 
         var gpa = std.heap.GeneralPurposeAllocator(.{}){};
         defer _ = gpa.deinit();
