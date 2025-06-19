@@ -16,8 +16,8 @@ pub fn build(b: *std.Build) !void {
         .target = target,
     }).createModule();
 
-    const quark_config = config.QuarkConfig.new();
-    const frontend_path = try quark_config.getFrontendDir(b.allocator);
+    const quark_config = config.QuarkConfig.init();
+    const frontend_path = try quark_config.locateFrontend(b.allocator);
 
     const frontend = try binder.generate(b, .{
         .source_dir = frontend_path,

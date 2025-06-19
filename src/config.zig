@@ -1,61 +1,56 @@
 const std = @import("std");
 
 pub const SizeHint = enum(c_uint) {
-    NONE = 0,
-    MIN = 1,
-    MAX = 2,
-    FIXED = 3,
+    none = 0,
+    min = 1,
+    max = 2,
+    fixed = 3,
 };
 
 pub const QuarkConfig = struct {
-    title: [:0]const u8 = "Quark Application",
-    width: u16 = 800,
-    height: u16 = 600,
-    resizable: SizeHint = SizeHint.NONE,
-    debug: bool = false,
-    frontend: [:0]const u8 = "frontend",
+    _title: [:0]const u8 = "Quark Application",
+    _width: u16 = 800,
+    _height: u16 = 600,
+    _resize: SizeHint = .min,
+    _debug: bool = false,
+    _frontend: [:0]const u8 = "frontend",
 
-    pub fn new() QuarkConfig {
+    pub fn init() QuarkConfig {
         return QuarkConfig{};
     }
 
-    pub fn setTitle(self: QuarkConfig, title: [:0]const u8) QuarkConfig {
+    pub fn title(self: QuarkConfig, t: [:0]const u8) QuarkConfig {
         var config = self;
-        config.title = title;
+        config._title = t; // itle
         return config;
     }
 
-    pub fn setWidth(self: QuarkConfig, width: u16) QuarkConfig {
+    pub fn size(self: QuarkConfig, w: u16, h: u16) QuarkConfig {
         var config = self;
-        config.width = width;
+        config._width = w; // idth
+        config._height = h; // eight
         return config;
     }
 
-    pub fn setHeight(self: QuarkConfig, height: u16) QuarkConfig {
+    pub fn resize(self: QuarkConfig, h: SizeHint) QuarkConfig {
         var config = self;
-        config.height = height;
+        config._resize = h; // int
         return config;
     }
 
-    pub fn setResizable(self: QuarkConfig, hint: SizeHint) QuarkConfig {
+    pub fn debug(self: QuarkConfig, d: bool) QuarkConfig {
         var config = self;
-        config.resizable = hint;
+        config._debug = d; // ebug
         return config;
     }
 
-    pub fn setDebug(self: QuarkConfig, debug: bool) QuarkConfig {
+    pub fn frontend(self: QuarkConfig, dir: [:0]const u8) QuarkConfig {
         var config = self;
-        config.debug = debug;
+        config._frontend = dir; // ectory
         return config;
     }
 
-    pub fn setFrontend(self: QuarkConfig, directory: [:0]const u8) QuarkConfig {
-        var config = self;
-        config.frontend = directory;
-        return config;
-    }
-
-    pub fn getFrontendDir(self: QuarkConfig, allocator: std.mem.Allocator) ![]u8 {
-        return try std.fmt.allocPrint(allocator, "src/{s}", .{self.frontend});
+    pub fn locateFrontend(self: QuarkConfig, allocator: std.mem.Allocator) ![]u8 { // This is used in build.zig
+        return try std.fmt.allocPrint(allocator, "src/{s}", .{self._frontend});
     }
 };

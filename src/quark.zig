@@ -11,7 +11,7 @@ pub const Quark = struct {
     config: config.QuarkConfig,
 
     pub fn createWindow(quark_config: config.QuarkConfig) (quark_errors.WebViewError || error{OutOfMemory})!Quark {
-        const wv = quark_webview.webview_create(@intFromBool(quark_config.debug), null);
+        const wv = quark_webview.webview_create(@intFromBool(quark_config._debug), null);
         if (wv == null) return quark_errors.WebViewError.MissingDependency;
 
         var quark = Quark{
@@ -19,7 +19,7 @@ pub const Quark = struct {
             .config = quark_config
         };
 
-        try checkError(quark_webview.webview_set_title(quark.webview, quark_config.title));
+        try checkError(quark_webview.webview_set_title(quark.webview, quark_config._title));
         try uri_protocol.URIProtocol(&quark);
 
         const html = frontend.get("index.html") orelse @panic("Missing entrypoint: src/<frontend>/index.html");
