@@ -1,5 +1,5 @@
 <!-- TODO: [..] Get a j*b. -->
-<img src="assets/branding/quark_white.svg" width="120px" align="left">
+<img src="assets/branding/quark_white.svg" width="78px" align="left">
 
 ### `libquark[v3]`
 
