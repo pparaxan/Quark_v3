@@ -35,11 +35,14 @@ pub fn build(b: *std.Build) !void {
     libquark_mod.addImport("webview", webview);
     libquark_mod.addImport("frontend", frontend_mod);
 
-    const libquark = b.addStaticLibrary(.{
+    const libquark = b.addLibrary(.{
         .name = "quark",
-        .root_source_file = b.path("src/root.zig"),
-        .optimize = optimize,
-        .target = target,
+        .root_module = b.createModule(.{
+            .root_source_file = b.path("src/root.zig"),
+            .target = target,
+            .optimize = optimize,
+        }),
+        .linkage = .dynamic,
     });
 
     libquark.addIncludePath(lib_webview.path("core/include/webview/"));
