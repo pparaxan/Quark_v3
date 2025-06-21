@@ -51,6 +51,6 @@ pub const QuarkConfig = struct {
     }
 
     pub fn locateFrontend(self: QuarkConfig, allocator: std.mem.Allocator) ![]u8 { // This is used in build.zig
-        return try std.fmt.allocPrint(allocator, "src/{s}", .{self._frontend});
+        return try std.fmt.allocPrint(allocator, "{s}", .{self._frontend});
     }
 };

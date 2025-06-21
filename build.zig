@@ -21,7 +21,7 @@ pub fn build(b: *std.Build) !void {
 
     const frontend = try binder.generate(b, .{
         .source_dir = frontend_path,
-        .output_file = "binder.zig",
+        .target_file = "binder.zig",
         .namespace = "quark_frontend",
     });
 
