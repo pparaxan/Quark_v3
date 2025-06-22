@@ -44,5 +44,5 @@ jobs:
         if: steps.verify.outputs.changed == 'true'
         run: |
           git add .
-          git commit -m "style: fmt"
+          git commit -m "style: fmt [skip ci]"
           git push
