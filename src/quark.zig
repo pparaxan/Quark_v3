@@ -3,8 +3,8 @@ pub const quark_webview = @import("webview");
 pub const quark_errors = @import("errors.zig");
 const config = @import("config.zig");
 pub const frontend = @import("frontend"); // check build.zig for more details about this.
-const uri_protocol = @import("URI/protocol.zig");
-const uri_mime = @import("URI/mime.zig");
+const mime = @import("mime.zig");
+const vfs = @import("VFS/linker.zig");
 
 pub const Quark = struct {
     webview: quark_webview.webview_t,
@@ -17,7 +17,7 @@ pub const Quark = struct {
         var quark = Quark{ .webview = wv, .config = quark_config };
 
         try checkError(quark_webview.webview_set_title(quark.webview, quark_config._title));
-        try uri_protocol.URIProtocol(&quark);
+        try QuarkVirtualFileSystem(&quark);
 
         const html = frontend.get("index.html") orelse @panic("Missing entrypoint: src/<frontend>/index.html");
 
@@ -25,14 +25,11 @@ pub const Quark = struct {
         defer _ = gpa.deinit();
         const allocator = gpa.allocator();
 
-        const processed_html = try convertBase64(allocator, html);
-        defer allocator.free(processed_html);
-
-        const null_terminated = try allocator.allocSentinel(u8, processed_html.len, 0);
+        const null_terminated = try allocator.allocSentinel(u8, html.len, 0);
         defer allocator.free(null_terminated);
-        @memcpy(null_terminated, processed_html);
+        @memcpy(null_terminated, html);
 
-        try checkError(quark_webview.webview_set_html(quark.webview, null_terminated[0..processed_html.len :0].ptr));
+        try checkError(quark_webview.webview_set_html(quark.webview, null_terminated[0..html.len :0].ptr));
         return quark;
     }
 
@@ -57,53 +54,54 @@ pub const Quark = struct {
     // }
 };
 
-fn convertBase64(allocator: std.mem.Allocator, content: []const u8) error{OutOfMemory}![]u8 {
-    var result = std.ArrayList(u8).init(allocator);
-    defer result.deinit();
+fn QuarkVirtualFileSystem(quark: *Quark) !void {
+    var gpa = std.heap.GeneralPurposeAllocator(.{}){};
+    defer _ = gpa.deinit();
+    const allocator = gpa.allocator();
 
-    var i: usize = 0;
-    while (i < content.len) {
-        if (i + 8 < content.len and std.mem.startsWith(u8, content[i..], "quark://")) {
-            var url_end = i + 8;
-            while (url_end < content.len) {
-                const char = content[url_end];
-                if (char == '"' or char == '\'' or char == ' ' or char == '>' or char == '\n' or char == '\r' or char == ')') {
-                    break;
-                }
-                url_end += 1;
-            }
+    var js_code = std.ArrayList(u8).init(allocator);
+    defer js_code.deinit();
 
-            const path = content[i + 8 .. url_end];
+    const vfs_modules = [_][]const u8{
+        vfs.api,
+        vfs.handler,
+        vfs.index,
+        vfs.processor
+    };
 
-            if (frontend.get(path)) |resource_data| {
-                const resource_mime_type = uri_mime.URIMimeType(path);
-
-                const processed_resource_data = try convertBase64(allocator, resource_data);
-                defer allocator.free(processed_resource_data);
-
-                const encoder = std.base64.standard.Encoder;
-                const encoded_len = encoder.calcSize(processed_resource_data.len);
-                const encoded = try allocator.alloc(u8, encoded_len);
-                defer allocator.free(encoded);
-
-                _ = encoder.encode(encoded, processed_resource_data);
-
-                const data_url = try std.fmt.allocPrint(allocator, "data:{s};base64,{s}", // I swear if this becomes a problem in the future, I'll @panic
-                    .{ resource_mime_type, encoded });
-                defer allocator.free(data_url);
-
-                try result.appendSlice(data_url);
-                i = url_end;
-            } else {
-                @panic("Put the 'quark://' URI at the start of your imported files!!");
-            }
-        } else {
-            try result.append(content[i]);
-            i += 1;
-        }
+    for (vfs_modules) |module_content| {
+        try js_code.appendSlice(module_content);
     }
 
-    return result.toOwnedSlice();
+    for (frontend.resources) |resource| {
+        const escaped_data = try base64(allocator, resource.path);
+        defer allocator.free(escaped_data);
+
+        const mime_type = mime.mimeType(resource.file);
+
+        try js_code.writer().print(
+            \\window.__QUARK_VFS__["{s}"] = {{
+            \\  data: "{s}",
+            \\  mimeType: "{s}"
+            \\}};
+            \\
+        , .{ resource.file, escaped_data, mime_type });
+    }
+
+    const null_terminated = try allocator.allocSentinel(u8, js_code.items.len, 0);
+    defer allocator.free(null_terminated);
+    @memcpy(null_terminated, js_code.items);
+
+    try checkError(quark_webview.webview_init(quark.webview, null_terminated[0..js_code.items.len :0].ptr));
+}
+
+fn base64(allocator: std.mem.Allocator, data: []const u8) ![]u8 {
+    const encoder = std.base64.standard.Encoder;
+    const encoded_len = encoder.calcSize(data.len);
+    const encoded = try allocator.alloc(u8, encoded_len);
+
+    _ = encoder.encode(encoded, data);
+    return encoded;
 }
 
 fn checkError(code: c_int) quark_errors.WebViewError!void {

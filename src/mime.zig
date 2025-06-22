@@ -1,11 +1,4 @@
 const std = @import("std");
-pub const binder = @import("frontend");
-
-pub const FetchResult = struct {
-    success: bool,
-    data: []const u8,
-    mimeType: []const u8,
-};
 
 const MimeMapping = struct {
     ext: []const u8,
@@ -90,26 +83,7 @@ const mime_mappings = [_]MimeMapping{ // PLEASE MAKE PULL REQUESTS IF YOU HAVE A
     .{ .ext = ".7z", .mime = "application/x-7z-compressed" },
 };
 
-/// This is the `__quark` equivalent function.
-/// It looks up the embedded file, returns success and data if found, with correct mimeType.
-pub fn URIMime(path: []const u8) FetchResult {
-    const fileData = binder.get(path);
-    if (fileData) |data| {
-        return FetchResult{
-            .success = true,
-            .data = data,
-            .mimeType = URIMimeType(path),
-        };
-    } else {
-        return FetchResult{
-            .success = false,
-            .data = &[_]u8{},
-            .mimeType = "application/octet-stream",
-        };
-    }
-}
-
-pub fn URIMimeType(filename: []const u8) []const u8 {
+pub fn mimeType(filename: []const u8) []const u8 {
     for (mime_mappings) |mapping| {
         if (std.mem.endsWith(u8, filename, mapping.ext)) {
             return mapping.mime;
