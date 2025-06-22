@@ -10,7 +10,7 @@ jobs:
       image: "archlinux:base"
     steps:
       - name: Install dependencies
-        run: pacman -Syu zig git --noconfirm
+        run: pacman -Syu zig git nodejs --noconfirm
 
       - name: Checkout repository
         uses: actions/checkout@v4
