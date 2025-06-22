@@ -25,10 +25,9 @@ pub fn URIProtocolHandler(seq: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque
     const quark_ptr: *Quark.Quark = @ptrCast(@alignCast(arg.?));
     const req_str = std.mem.span(req);
 
-
     var path: []const u8 = req_str;
     if (std.mem.startsWith(u8, req_str, "[\"") and std.mem.endsWith(u8, req_str, "\"]")) { // this works
-        path = req_str[2..req_str.len-2];
+        path = req_str[2 .. req_str.len - 2];
     }
 
     if (frontend.get(path)) |resource_data| {
@@ -46,12 +45,10 @@ pub fn URIProtocolHandler(seq: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque
 
         var response_buf: [8192]u8 = undefined;
 
-        const response_len = std.fmt.bufPrint(&response_buf,
-            "{{\"success\":true,\"data\":\"{s}\",\"mimeType\":\"{s}\"}}",
-            .{ escaped_data, mime_type }) catch {
-                _ = Quark.quark_webview.webview_return(quark_ptr.webview, seq, 1, "{\"success\":false}");
-                return;
-            };
+        const response_len = std.fmt.bufPrint(&response_buf, "{{\"success\":true,\"data\":\"{s}\",\"mimeType\":\"{s}\"}}", .{ escaped_data, mime_type }) catch {
+            _ = Quark.quark_webview.webview_return(quark_ptr.webview, seq, 1, "{\"success\":false}");
+            return;
+        };
         response_buf[response_len.len] = 0;
 
         const ret = Quark.quark_webview.webview_return(quark_ptr.webview, seq, 0, &response_buf[0]);

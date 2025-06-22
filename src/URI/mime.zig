@@ -95,7 +95,7 @@ const mime_mappings = [_]MimeMapping{ // PLEASE MAKE PULL REQUESTS IF YOU HAVE A
 pub fn URIMime(path: []const u8) FetchResult {
     const fileData = binder.get(path);
     if (fileData) |data| {
-        return FetchResult {
+        return FetchResult{
             .success = true,
             .data = data,
             .mimeType = URIMimeType(path),

@@ -14,10 +14,7 @@ pub const Quark = struct {
         const wv = quark_webview.webview_create(@intFromBool(quark_config._debug), null);
         if (wv == null) return quark_errors.WebViewError.MissingDependency;
 
-        var quark = Quark{
-            .webview = wv,
-            .config = quark_config
-        };
+        var quark = Quark{ .webview = wv, .config = quark_config };
 
         try checkError(quark_webview.webview_set_title(quark.webview, quark_config._title));
         try uri_protocol.URIProtocol(&quark);
@@ -76,7 +73,7 @@ fn convertBase64(allocator: std.mem.Allocator, content: []const u8) error{OutOfM
                 url_end += 1;
             }
 
-            const path = content[i+8..url_end];
+            const path = content[i + 8 .. url_end];
 
             if (frontend.get(path)) |resource_data| {
                 const resource_mime_type = uri_mime.URIMimeType(path);
@@ -91,11 +88,8 @@ fn convertBase64(allocator: std.mem.Allocator, content: []const u8) error{OutOfM
 
                 _ = encoder.encode(encoded, processed_resource_data);
 
-                const data_url = try std.fmt.allocPrint(
-                    allocator,
-                    "data:{s};base64,{s}", // I swear if this becomes a problem in the future, I'll @panic
-                    .{ resource_mime_type, encoded }
-                );
+                const data_url = try std.fmt.allocPrint(allocator, "data:{s};base64,{s}", // I swear if this becomes a problem in the future, I'll @panic
+                    .{ resource_mime_type, encoded });
                 defer allocator.free(data_url);
 
                 try result.appendSlice(data_url);

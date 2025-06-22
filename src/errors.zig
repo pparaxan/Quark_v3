@@ -1,4 +1,4 @@
-pub const WebViewError = error {
+pub const WebViewError = error{
     MissingDependency,
     Canceled,
     InvalidState,

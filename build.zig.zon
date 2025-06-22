@@ -4,20 +4,13 @@
     .fingerprint = 0xd00d6c7f4552224e,
     .minimum_zig_version = "0.14.0",
     .dependencies = .{
-        .webview = .{
-            .url = "https://github.com/webview/webview/archive/refs/tags/0.12.0.tar.gz",
-            .hash = "N-V-__8AAApvCAAAytQB_cgXXByCvjipBvDqPIqeKoXyZw5c",
-        },
+        .webview = .{ .url = "https://github.com/webview/webview/archive/refs/tags/0.12.0.tar.gz", .hash = "N-V-__8AAApvCAAAytQB_cgXXByCvjipBvDqPIqeKoXyZw5c" },
         // .webview2 = .{
         //     .url = "https://nuget.org/api/v2/package/Microsoft.Web.WebView2/1.0.3179.45",
         //     .hash = "put it here"
         // }
-        .binder = .{
-            .url = "https://codeberg.org/pparaxan/binder/archive/v1.1.0.tar.gz",
-            .hash = "binder-1.0.0-KglZgeYXAADVcmoNfc1X6KLuJPNwdkgXAholLUEwHMN0"
-        }
+        .binder = .{ .url = "https://codeberg.org/pparaxan/binder/archive/v1.1.0.tar.gz", .hash = "binder-1.0.0-KglZgeYXAADVcmoNfc1X6KLuJPNwdkgXAholLUEwHMN0" },
     },
-
     .paths = .{
         "build.zig",
         "build.zig.zon",
