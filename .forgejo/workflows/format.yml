@@ -1,0 +1,47 @@
+---
+on:
+  pull_request:
+  push:
+
+jobs:
+  format:
+    runs-on: codeberg-tiny
+    container:
+      image: "archlinux:base"
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu zig git --noconfirm
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CODEBERG_TOKEN }}
+          fetch-depth: 0
+
+      - name: Configure Git
+        run: |
+          git config --global user.name "Forgejo Actions"
+          git config --global user.email "john@example.com"
+
+      - name: Format Zig code
+        run: |
+          find . -name "*.zig" -exec zig fmt {} \;
+          find . -name "*.zig.zon" -exec zig fmt {} \;
+
+      - name: Check for changes
+        id: verify
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Files have been formatted, proceeding with commit..."
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No files has been formatted, skipping commit..."
+          fi
+
+      - name: Commit and push changes
+        if: steps.verify.outputs.changed == 'true'
+        run: |
+          git add .
+          git commit -m "style: fmt"
+          git push
