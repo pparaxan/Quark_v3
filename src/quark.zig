@@ -62,12 +62,7 @@ fn QuarkVirtualFileSystem(quark: *Quark) !void {
     var js_code = std.ArrayList(u8).init(allocator);
     defer js_code.deinit();
 
-    const vfs_modules = [_][]const u8{
-        vfs.api,
-        vfs.handler,
-        vfs.index,
-        vfs.processor
-    };
+    const vfs_modules = [_][]const u8{ vfs.api, vfs.handler, vfs.index, vfs.processor };
 
     for (vfs_modules) |module_content| {
         try js_code.appendSlice(module_content);
