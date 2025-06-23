@@ -34,24 +34,16 @@ pub const Quark = struct {
     }
 
     pub fn execWindow(self: Quark) quark_errors.WebViewError!void {
-        // This is a workaround, looks like the "GTK" in webkit2gtk has bad code,
-        // `webview_set_size()` fails before `webview_run()` because the window hasn't
-        // realized that the config is set yet.
-        return checkError(quark_webview.webview_run(self.webview));
+        try checkError(quark_webview.webview_run(self.webview));
+        try checkError(quark_webview.webview_set_size(
+            self.webview,
+            @as(c_int, @intCast(self.config._width)),
+            @as(c_int, @intCast(self.config._height)),
+            @as(c_uint, @intFromEnum(self.config._resize)),
+        ));
+
+        return;
     }
-
-    // fn setSize(self: Quark) quark_errors.WebViewError!void {
-    //     return checkError(quark_webview.webview_set_size(
-    //         self.webview,
-    //         @as(c_int, @intCast(self.config.width)),
-    //         @as(c_int, @intCast(self.config.height)),
-    //         @as(c_uint, @intFromEnum(self.config.resizable))
-    //     ));
-    // }
-
-    // pub fn destroyWindow(self: Quark) quark_errors.WebViewError!void {
-    //     return checkError(quark_webview.webview_destroy(self.webview));
-    // }
 };
 
 fn QuarkVirtualFileSystem(quark: *Quark) !void {
