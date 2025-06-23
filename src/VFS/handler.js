@@ -1,4 +1,3 @@
-// VFS initialization and DOM handling
 document.addEventListener('DOMContentLoaded', function() {
     console.log('Document Object Model has loaded, processing existing elements...');
 
