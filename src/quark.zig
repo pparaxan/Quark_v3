@@ -1,6 +1,6 @@
 const std = @import("std");
-pub const quark_webview = @import("webview");
-pub const quark_errors = @import("errors.zig");
+const quark_webview = @import("webview");
+const quark_errors = @import("errors.zig");
 const config = @import("config.zig");
 pub const frontend = @import("frontend"); // check build.zig for more details about this.
 const mime = @import("mime.zig");
