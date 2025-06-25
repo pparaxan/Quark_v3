@@ -73,8 +73,8 @@ pub fn build(b: *std.Build) !void {
         },
         .linux => {
             libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
-            libquark.linkSystemLibrary("gtk+-3.0");
-            libquark.linkSystemLibrary("webkit2gtk-4.1");
+            libquark.linkSystemLibrary("gtk4");
+            libquark.linkSystemLibrary("webkitgtk-6.0");
         },
         else => {
             @compileError("Unsupported operating system for libquark.");
