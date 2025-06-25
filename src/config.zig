@@ -1,17 +1,17 @@
 const std = @import("std");
 
-pub const SizeHint = enum(c_uint) {
-    none = 0,
-    min = 1,
-    max = 2,
-    fixed = 3,
+pub const SizeHint = enum(c_uint) { // revert this back to it being capitalized
+    NONE = 0,
+    MIN = 1,
+    MAX = 2,
+    FIXED = 3,
 };
 
 pub const QuarkConfig = struct {
     _title: [:0]const u8 = "Quark Application",
     _width: u16 = 800,
     _height: u16 = 600,
-    _resize: SizeHint = .min,
+    _resize: SizeHint = SizeHint.MIN,
     _debug: bool = false,
     _frontend: [:0]const u8 = "frontend",
 

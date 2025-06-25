@@ -17,6 +17,13 @@ pub const Quark = struct {
         var quark = Quark{ .webview = wv, .config = quark_config };
 
         try checkError(quark_webview.webview_set_title(quark.webview, quark_config._title));
+        try checkError(quark_webview.webview_set_size(
+            quark.webview,
+            @intCast(quark_config._width),
+            @intCast(quark_config._height),
+            @intFromEnum(quark_config._resize),
+        ));
+
         try QuarkVirtualFileSystem(&quark);
 
         const html = frontend.get("index.html") orelse @panic("Missing entrypoint: src/<frontend>/index.html");
@@ -34,15 +41,7 @@ pub const Quark = struct {
     }
 
     pub fn execWindow(self: Quark) quark_errors.WebViewError!void {
-        try checkError(quark_webview.webview_run(self.webview));
-        try checkError(quark_webview.webview_set_size(
-            self.webview,
-            @as(c_int, @intCast(self.config._width)),
-            @as(c_int, @intCast(self.config._height)),
-            @as(c_uint, @intFromEnum(self.config._resize)),
-        ));
-
-        return;
+        return checkError(quark_webview.webview_run(self.webview));
     }
 };
 
