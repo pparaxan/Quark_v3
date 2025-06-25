@@ -3,7 +3,7 @@ const std = @import("std");
 pub const SizeHint = enum(c_uint) {
     none = 0,
     min = 1,
-    max = 2,
+    // max = 2, // webkitgtk doesn't support this.
     fixed = 3,
 };
 
