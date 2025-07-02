@@ -13,7 +13,6 @@ pub const QuarkConfig = struct {
     _height: u16 = 600,
     _resize: SizeHint = .min,
     _debug: bool = false,
-    _frontend: [:0]const u8 = "frontend",
 
     pub fn init() QuarkConfig {
         return QuarkConfig{};
@@ -42,15 +41,5 @@ pub const QuarkConfig = struct {
         var config = self;
         config._debug = d; // ebug
         return config;
-    }
-
-    pub fn frontend(self: QuarkConfig, dir: [:0]const u8) QuarkConfig {
-        var config = self;
-        config._frontend = dir; // ectory
-        return config;
-    }
-
-    pub fn locateFrontend(self: QuarkConfig, allocator: std.mem.Allocator) ![]u8 { // This is used in build.zig
-        return try std.fmt.allocPrint(allocator, "{s}", .{self._frontend});
     }
 };

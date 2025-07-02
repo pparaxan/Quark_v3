@@ -16,11 +16,8 @@ pub fn build(b: *std.Build) !void {
         .target = target,
     }).createModule();
 
-    const quark_config = config.QuarkConfig.init();
-    const frontend_path = try quark_config.locateFrontend(b.allocator);
-
     const frontend = try binder.generate(b, .{
-        .source_dir = frontend_path,
+        .source_dir = "src_quark",
         .target_file = "binder.zig",
         .namespace = "quark_frontend",
     });
