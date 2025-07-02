@@ -15,6 +15,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    document.querySelectorAll('script[src]').forEach(script => {
+        const src = script.getAttribute('src');
+        if (window.__QUARK_VFS__[src]) {
+            const asset = window.__QUARK_VFS__[src];
+            const blob = createBlob(asset);
+            const url = URL.createObjectURL(blob);
+
+            const newScript = document.createElement('script');
+            newScript.src = url;
+            script.parentNode.replaceChild(newScript, script);
+        }
+    });
+
     setTimeout(() => {
         for (let i = 0; i < document.styleSheets.length; i++) {
             processCSS(document.styleSheets[i]);

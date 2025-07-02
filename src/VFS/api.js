@@ -26,6 +26,21 @@ document.createElement = function(tagName) {
         };
     }
 
+    if (tagName.toLowerCase() === 'script') {
+        const originalSetAttribute = element.setAttribute;
+
+        element.setAttribute = function(name, value) {
+            if (name === 'src' && window.__QUARK_VFS__[value]) {
+                const asset = window.__QUARK_VFS__[value];
+                const blob = createBlob(asset);
+                const url = URL.createObjectURL(blob);
+                return originalSetAttribute.call(this, name, url);
+            }
+
+            return originalSetAttribute.call(this, name, value);
+        };
+    }
+
     return element;
 };
 
