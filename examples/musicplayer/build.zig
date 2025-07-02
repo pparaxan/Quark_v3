@@ -7,7 +7,7 @@ pub fn build(b: *@import("std").Build) void {
     const lib_quark = b.dependency("quark", .{});
 
     const executable = b.addExecutable(.{
-        .name = "minimal",
+        .name = "musicplayer",
         .root_source_file = b.path("src/main.zig"),
         .target = target,
         .optimize = optimize,
