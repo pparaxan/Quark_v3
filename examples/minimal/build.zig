@@ -7,8 +7,8 @@ pub fn build(b: *@import("std").Build) void {
     const lib_quark = b.dependency("quark", .{});
 
     const executable = b.addExecutable(.{
-        .name = "quark_examples",
-        .root_source_file = b.path("src/helloworld.zig"), // add more examples over time
+        .name = "minimal",
+        .root_source_file = b.path("src/main.zig"), // add more examples over time
         .target = target,
         .optimize = optimize,
     });
@@ -19,12 +19,7 @@ pub fn build(b: *@import("std").Build) void {
     b.installArtifact(executable);
 
     const run_cmd = b.addRunArtifact(executable);
-    run_cmd.step.dependOn(b.getInstallStep());
-
-    if (b.args) |args| {
-        run_cmd.addArgs(args);
-    }
-
     const run_step = b.step("run", "Run the app");
+    run_cmd.step.dependOn(b.getInstallStep());
     run_step.dependOn(&run_cmd.step);
 }

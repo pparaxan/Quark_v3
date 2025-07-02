@@ -7,9 +7,7 @@ pub fn main() !void {
         .size(1280, 720) // this and width doesn't work, fix it later you idiot.
         .resize(libquark.SizeHint.min)
         .debug(true);
-    // .setFrontend("frontend");
 
     const quark = try libquark.Quark.createWindow(config);
     try quark.execWindow();
-    // try quark.destroy_window();
 }
