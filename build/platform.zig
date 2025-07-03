@@ -1,6 +1,10 @@
 const std = @import("std");
 
 pub fn platform(libquark: *std.Build.Step.Compile, lib_webview: *std.Build.Dependency) !void {
+    libquark.addIncludePath(lib_webview.path("core/include/webview/"));
+    libquark.root_module.addCMacro("WEBVIEW_SHARED", "1"); // WEBVIEW_STATIC > WEBVIEW_SHARED
+    libquark.linkLibCpp();
+
     switch (@import("builtin").os.tag) {
         .macos => {
             libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
