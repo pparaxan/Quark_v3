@@ -1,45 +1,47 @@
 const std = @import("std");
 
-pub const SizeHint = enum(c_uint) {
-    none = 0,
-    min = 1,
-    // max = 2, // webkitgtk doesn't support this.
-    fixed = 3,
+pub const WindowHint = enum(c_uint) {
+    resizable = 0,
+    min_size = 1,
+    // max_size = 2, // webkitgtk-6.0 doesn't support this.
+    fixed_size = 3,
 };
 
-pub const QuarkConfig = struct {
-    _title: [:0]const u8 = "Quark Application",
-    _width: u16 = 800,
-    _height: u16 = 600,
-    _resize: SizeHint = .min,
-    _debug: bool = false,
+pub const WindowConfig = struct {
+    title: [:0]const u8 = "Quark Application",
+    width: u16 = 800,
+    height: u16 = 600,
+    size_hint: WindowHint = .resizable,
+    debug_mode: bool = false,
 
-    pub fn init() QuarkConfig {
-        return QuarkConfig{};
+    const Self = @This();
+
+    pub fn init() Self {
+        return Self{};
     }
 
-    pub fn title(self: QuarkConfig, t: [:0]const u8) QuarkConfig {
+    pub fn with_title(self: Self, new_title: [:0]const u8) Self {
         var config = self;
-        config._title = t; // itle
+        config.title = new_title;
         return config;
     }
 
-    pub fn size(self: QuarkConfig, w: u16, h: u16) QuarkConfig {
+    pub fn with_dimensions(self: Self, w: u16, h: u16) Self {
         var config = self;
-        config._width = w; // idth
-        config._height = h; // eight
+        config.width = w;
+        config.height = h;
         return config;
     }
 
-    pub fn resize(self: QuarkConfig, h: SizeHint) QuarkConfig {
+    pub fn with_size_hint(self: Self, hint: WindowHint) Self {
         var config = self;
-        config._resize = h; // int
+        config.size_hint = hint;
         return config;
     }
 
-    pub fn debug(self: QuarkConfig, d: bool) QuarkConfig {
+    pub fn with_debug(self: Self, enable: bool) Self {
         var config = self;
-        config._debug = d; // ebug
+        config.debug_mode = enable;
         return config;
     }
 };

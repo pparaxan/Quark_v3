@@ -2,12 +2,12 @@ const std = @import("std");
 const libquark = @import("quark");
 
 pub fn main() !void {
-    const config = libquark.QuarkConfig.init()
-        .title("Quark Application")
-        .size(1280, 720) // this and width doesn't work, fix it later you idiot.
-        .resize(libquark.SizeHint.min)
-        .debug(true);
+    const config = libquark.WindowConfig.init()
+        .with_title("Quark - minimal")
+        .with_dimensions(1280, 720)
+        .with_size_hint(libquark.WindowHint.min_size)
+        .with_debug(true);
 
-    const quark = try libquark.Quark.createWindow(config);
-    try quark.execWindow();
+    const window = try libquark.create_window(config);
+    try libquark.execute_window(window);
 }
