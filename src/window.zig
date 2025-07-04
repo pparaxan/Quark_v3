@@ -31,6 +31,7 @@ pub const QuarkWindow = struct {
 
     fn initialize(self: *Self) WebViewError!void {
         self.set_title() catch |err| @panic(@errorName(err));
+        self.set_size() catch |err| @panic(@errorName(err));
         self.setup_gvfs() catch |err| @panic(@errorName(err));
         self.load_entrypoint() catch |err| @panic(@errorName(err));
     }
@@ -60,6 +61,15 @@ pub const QuarkWindow = struct {
         @memcpy(null_terminated, html_content);
 
         try check_error(webview.webview_set_html(self.handle, null_terminated.ptr));
+    }
+
+    fn set_size(self: Self) WebViewError!void {
+        return check_error(webview.webview_set_size(
+            self.handle,
+            @intCast(self.config.width),
+            @intCast(self.config.height),
+            @intFromEnum(self.config.size_hint),
+        ));
     }
 
     pub fn run(self: Self) WebViewError!void {
