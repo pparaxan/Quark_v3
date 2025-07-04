@@ -45,6 +45,7 @@ pub fn build(b: *std.Build) !void {
         .linkage = .dynamic,
     });
 
+    libquark.addIncludePath(lib_webview.path("core/include/"));
     libquark.addIncludePath(lib_webview.path("core/include/webview/"));
     libquark.root_module.addCMacro("WEBVIEW_STATIC", "1");
     libquark.linkLibCpp();
