@@ -1,6 +1,13 @@
-pub const config = @import("config.zig");
-pub const quark = @import("quark.zig");
+const std = @import("std");
 
-pub const QuarkConfig = config.QuarkConfig;
-pub const SizeHint = config.SizeHint;
-pub const Quark = quark.Quark;
+pub const WindowConfig = @import("config.zig").WindowConfig;
+pub const WindowHint = @import("config.zig").WindowHint;
+pub const QuarkWindow = @import("window.zig").QuarkWindow;
+
+pub fn create_window(config: WindowConfig) !QuarkWindow {
+    return QuarkWindow.create(config);
+}
+
+pub fn execute_window(window: QuarkWindow) !void {
+    return window.run();
+}
