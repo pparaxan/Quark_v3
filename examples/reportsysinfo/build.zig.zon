@@ -1,0 +1,19 @@
+.{
+    .name = .quark_reportsysinfo,
+    .version = "0.0.1",
+    .fingerprint = 0xfeacc2e4c8a8c7d5,
+    .minimum_zig_version = "0.14.0",
+    .dependencies = .{ .quark = .{
+        .path = "../../",
+    }, .crosssys = .{
+            .url = "git+https://codeberg.org/pparaxan/CrossSys#b5fc0b5e9126c07d0cf29d47071776e1f47ec4fe",
+            .hash = "crosssys-0.0.1-0f9elRApAABaIWeM91nH7tVyEauJAfnOZvzvQcBLsJe0",
+        },
+    },
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "src",
+        "README.md",
+    },
+}
