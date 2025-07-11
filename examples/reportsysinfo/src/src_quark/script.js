@@ -25,7 +25,7 @@ async function reportSysInfo() {
       // kernelValue.classList.remove('loading');
 
    } catch (error) {
-      console.error('Error fetching system info:', error);
+      console.error(error);
       // Add more stuff idk man?
    } finally {
       isLoading = false;
