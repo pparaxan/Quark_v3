@@ -3,12 +3,9 @@
     .version = "0.0.1",
     .fingerprint = 0xfeacc2e4c8a8c7d5,
     .minimum_zig_version = "0.14.0",
-    .dependencies = .{ .quark = .{
-        .path = "../../",
-    }, .crosssys = .{
-            .url = "git+https://codeberg.org/pparaxan/CrossSys#e771f614a1465a6fe5d99a441b8756e9d5f0a578",
-            .hash = "crosssys-0.0.1-0f9elf8sAABlGeDO98nLvGZ4AcdNEPh9z3lGsJHpIUkl",
-        },
+    .dependencies = .{
+        .quark = .{ .path = "../../" },
+        .crosssys = .{ .url = "git+https://codeberg.org/pparaxan/CrossSys#e771f614a1465a6fe5d99a441b8756e9d5f0a578", .hash = "crosssys-0.0.1-0f9elf8sAABlGeDO98nLvGZ4AcdNEPh9z3lGsJHpIUkl" },
     },
     .paths = .{
         "build.zig",

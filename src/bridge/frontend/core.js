@@ -42,4 +42,4 @@ window.__QUARK_BRIDGE_HANDLE_RESPONSE__ = function (id, success, data) {
    }
 };
 
-console.log("Quark Bridge initialized");
+console.log("Quark Bridge initialized.");

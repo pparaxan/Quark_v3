@@ -11,7 +11,7 @@ pub fn main() !void {
         .with_debug(true);
 
     var window = try libquark.create_window(config);
-    try libquark.register_command(&window, "get_info", get_info);
+    try libquark.register_command("get_info", get_info);
     try libquark.execute_window(&window);
 }
 

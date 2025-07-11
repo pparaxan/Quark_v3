@@ -6,4 +6,4 @@
 
 window.__QUARK_VFS__ = {}; // Sends the backend data to the frontend.
 
-console.log("Quark Virtual File System initialized");
+console.log("Quark Virtual File System initialized.");

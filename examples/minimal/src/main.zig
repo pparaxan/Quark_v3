@@ -8,6 +8,6 @@ pub fn main() !void {
         .with_size_hint(libquark.WindowHint.resizable)
         .with_debug(true);
 
-    const window = try libquark.create_window(config);
-    try libquark.execute_window(window);
+    var window = try libquark.create_window(config);
+    try libquark.execute_window(&window);
 }

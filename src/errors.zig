@@ -1,3 +1,5 @@
+const libwebview = @import("webview");
+
 pub const WebViewError = error{
     MissingDependency,
     Canceled,
@@ -8,16 +10,21 @@ pub const WebViewError = error{
     NotFound,
 };
 
-pub fn map_error(err: anytype) WebViewError {
-    const lib = @import("webview");
+pub fn mapWebviewError(err: anytype) WebViewError {
     return switch (err) {
-        lib.WEBVIEW_ERROR_MISSING_DEPENDENCY => WebViewError.MissingDependency,
-        lib.WEBVIEW_ERROR_CANCELED => WebViewError.Canceled,
-        lib.WEBVIEW_ERROR_INVALID_STATE => WebViewError.InvalidState,
-        lib.WEBVIEW_ERROR_INVALID_ARGUMENT => WebViewError.InvalidArgument,
-        lib.WEBVIEW_ERROR_UNSPECIFIED => WebViewError.Unspecified,
-        lib.WEBVIEW_ERROR_DUPLICATE => WebViewError.Duplicate,
-        lib.WEBVIEW_ERROR_NOT_FOUND => WebViewError.NotFound,
+        libwebview.WEBVIEW_ERROR_MISSING_DEPENDENCY => WebViewError.MissingDependency,
+        libwebview.WEBVIEW_ERROR_CANCELED => WebViewError.Canceled,
+        libwebview.WEBVIEW_ERROR_INVALID_STATE => WebViewError.InvalidState,
+        libwebview.WEBVIEW_ERROR_INVALID_ARGUMENT => WebViewError.InvalidArgument,
+        libwebview.WEBVIEW_ERROR_UNSPECIFIED => WebViewError.Unspecified,
+        libwebview.WEBVIEW_ERROR_DUPLICATE => WebViewError.Duplicate,
+        libwebview.WEBVIEW_ERROR_NOT_FOUND => WebViewError.NotFound,
         else => unreachable,
     };
+}
+
+pub fn checkError(code: c_int) WebViewError!void {
+    if (code != libwebview.WEBVIEW_ERROR_OK) {
+        return mapWebviewError(code);
+    }
 }
