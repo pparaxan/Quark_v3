@@ -5,17 +5,17 @@ const builtin = @import("builtin").os.tag;
 
 pub fn main() !void {
     const config = libquark.WindowConfig.init()
-        .with_title("Quark - reportsysinfo")
-        .with_dimensions(1280, 720)
-        .with_size_hint(libquark.WindowHint.min_size)
-        .with_debug(true);
+        .withTitle("Quark - reportsysinfo")
+        .withDimensions(1280, 720)
+        .withSizeHint(libquark.WindowHint.min_size)
+        .withDebug(true);
 
-    var window = try libquark.create_window(config);
-    try libquark.register_command("get_info", get_info);
-    try libquark.execute_window(&window);
+    var window = try libquark.createWindow(config);
+    try libquark.registerCommand("reportSystemInfo", reportSystemInfo);
+    try libquark.executeWindow(&window);
 }
 
-fn getDistroInfo() ![]const u8 {
+fn fetchDistroInfo() ![]const u8 {
     return switch (builtin) {
         .linux => libcrosssys.distro.Linux.getDistro(),
         // .windows => libcrosssys.cs.distro.Windows.getDistro(),
@@ -25,7 +25,7 @@ fn getDistroInfo() ![]const u8 {
     };
 }
 
-fn getKernelInfo() ![]const u8 {
+fn fetchKernelInfo() ![]const u8 {
     return switch (builtin) {
         .linux => libcrosssys.kernel.Linux.getKernel(),
         // .windows => libcrosssys.kernel.Windows.getKernel(),
@@ -35,9 +35,9 @@ fn getKernelInfo() ![]const u8 {
     };
 }
 
-fn get_info(allocator: std.mem.Allocator, _: []const u8) []const u8 {
-    const distro = getDistroInfo() catch "Unknown";
-    const kernel = getKernelInfo() catch "Unknown";
+fn reportSystemInfo(allocator: std.mem.Allocator, _: []const u8) []const u8 {
+    const distro = fetchDistroInfo() catch "Unknown";
+    const kernel = fetchKernelInfo() catch "Unknown";
 
     const distro_str = std.mem.sliceTo(distro, 0);
     const kernel_str = std.mem.sliceTo(kernel, 0);
