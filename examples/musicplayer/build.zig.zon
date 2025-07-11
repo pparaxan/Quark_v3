@@ -3,9 +3,7 @@
     .version = "0.0.1",
     .fingerprint = 0xc6fc8f3c91d0834c,
     .minimum_zig_version = "0.14.0",
-    .dependencies = .{ .quark = .{
-        .path = "../../"
-    } },
+    .dependencies = .{ .quark = .{ .path = "../../" } },
     .paths = .{
         "build.zig",
         "build.zig.zon",

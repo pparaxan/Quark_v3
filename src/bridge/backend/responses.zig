@@ -73,9 +73,7 @@ fn sendResponse(id: []const u8, data: []const u8, is_success: bool) !void {
     const success_str = if (is_success) "true" else "false";
     const error_type = if (is_success) "successful" else "error";
 
-    const js_response = try std.fmt.allocPrint(temp_allocator,
-        "try {{ if (window.__QUARK_BRIDGE_HANDLE_RESPONSE__) {{ window.__QUARK_BRIDGE_HANDLE_RESPONSE__('{s}', {s}, '{s}'); }} }} catch(e) {{ console.error('Failed to deliver {s} response:', e); }}",
-        .{ escaped_id, success_str, escaped_data, error_type });
+    const js_response = try std.fmt.allocPrint(temp_allocator, "try {{ if (window.__QUARK_BRIDGE_HANDLE_RESPONSE__) {{ window.__QUARK_BRIDGE_HANDLE_RESPONSE__('{s}', {s}, '{s}'); }} }} catch(e) {{ console.error('Failed to deliver {s} response:', e); }}", .{ escaped_id, success_str, escaped_data, error_type });
 
     const null_terminated = try temp_allocator.allocSentinel(u8, js_response.len, 0);
     @memcpy(null_terminated, js_response);
