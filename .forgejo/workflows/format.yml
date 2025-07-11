@@ -39,8 +39,9 @@ jobs:
           git add .
           git commit -m "style: fmt backend [skip ci]"
           git push
-  format-web:
+  format-frontend:
     runs-on: codeberg-tiny
+    needs: format-backend
     container:
       image: "archlinux:base"
     steps:
