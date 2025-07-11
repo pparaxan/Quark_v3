@@ -13,12 +13,12 @@ pub const EmbeddedResource = struct {
 };
 
 pub const resources = [_]EmbeddedResource{
+    .{ .file = "css/boxicons.css", .path = @embedFile("src_quark/css/boxicons.css") },
     .{ .file = "css/bar.css", .path = @embedFile("src_quark/css/bar.css") },
     .{ .file = "css/pages.css", .path = @embedFile("src_quark/css/pages.css") },
     .{ .file = "css/main.css", .path = @embedFile("src_quark/css/main.css") },
     .{ .file = "css/ui/icons.css", .path = @embedFile("src_quark/css/ui/icons.css") },
     .{ .file = "css/ui/buttons.css", .path = @embedFile("src_quark/css/ui/buttons.css") },
-    .{ .file = "css/boxicons.min.css", .path = @embedFile("src_quark/css/boxicons.min.css") },
     .{ .file = "css/themes.css", .path = @embedFile("src_quark/css/themes.css") },
     .{ .file = "fonts/boxicons.woff2", .path = @embedFile("src_quark/fonts/boxicons.woff2") },
     .{ .file = "javascript/main.js", .path = @embedFile("src_quark/javascript/main.js") },
