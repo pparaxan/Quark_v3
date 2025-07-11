@@ -17,7 +17,7 @@ pub const CommandEntry = struct {
     handler: CommandHandler,
 };
 
-pub fn register_command(name: []const u8, handler: CommandHandler) !void {
+pub fn register(name: []const u8, handler: CommandHandler) !void {
     const owned_name = try global_allocator.dupe(u8, name);
     errdefer global_allocator.free(owned_name);
     try global_commands.?.append(CommandEntry{
@@ -26,7 +26,7 @@ pub fn register_command(name: []const u8, handler: CommandHandler) !void {
     });
 }
 
-pub fn call_frontend(window: *QuarkWindow, function_name: []const u8, args: []const u8) !void {
+pub fn call(window: *QuarkWindow, function_name: []const u8, args: []const u8) !void {
     if (window.handle == null) {
         return errors.WebViewError.Unspecified;
     }
@@ -43,7 +43,7 @@ pub fn call_frontend(window: *QuarkWindow, function_name: []const u8, args: []co
     try errors.checkError(webview.webview_eval(window.handle, null_terminated.ptr));
 }
 
-pub fn emit_event(window: *QuarkWindow, event_name: []const u8, data: []const u8) !void {
+pub fn emit(window: *QuarkWindow, event_name: []const u8, data: []const u8) !void {
     if (window.handle == null) {
         return errors.WebViewError.Unspecified;
     }

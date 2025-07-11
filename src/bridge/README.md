@@ -7,11 +7,11 @@ QB is a robust bidirectional communication bridge between Zig (backend) and the 
 ## Functions
 <!-- Explain this better in the "comment" branch -->
 
-### `register_command(name, handler)`
+### `registerCommand(name, handler)`
 Register a backend function as a callable command from the frontend.
 
-### `call_frontend(window, function_name, args)`
+### `callCommand(function_name, args)`
 Execute a JavaScript function in the frontend from the backend.
 
-### `emit_event(window, event_name, data)`
+### `emitCommand(event_name, data)`
 Emit custom events to the frontend event system.

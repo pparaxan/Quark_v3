@@ -14,7 +14,7 @@ async function reportSysInfo() {
    distroValue.textContent = kernelValue.textContent = 'Fetching...';
 
    try {
-      const response = await quark.invoke('get_info', {});
+      const response = await quark.invoke('reportSystemInfo', {});
       const systemInfo = JSON.parse(response);
 
       distroValue.textContent = systemInfo.distro;

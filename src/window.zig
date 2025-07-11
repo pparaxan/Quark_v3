@@ -40,14 +40,14 @@ pub const QuarkWindow = struct {
     }
 
     fn initialize(self: *Self) WebViewError!void {
-        self.set_title() catch |err| @panic(@errorName(err));
-        self.set_size() catch |err| @panic(@errorName(err));
-        self.setup_gvfs() catch |err| @panic(@errorName(err));
-        self.load_entrypoint() catch |err| @panic(@errorName(err));
-        self.setup_bridge() catch |err| @panic(@errorName(err));
+        self.setTitle() catch |err| @panic(@errorName(err));
+        self.setSize() catch |err| @panic(@errorName(err));
+        self.setupGVFS() catch |err| @panic(@errorName(err));
+        self.loadEntryPoint() catch |err| @panic(@errorName(err));
+        self.setupBridge() catch |err| @panic(@errorName(err));
     }
 
-    fn setup_bridge(self: *Self) !void {
+    fn setupBridge(self: *Self) !void {
         const bridge_js = @embedFile("bridge/frontend/core.js");
         const null_terminated = try self.allocator.allocSentinel(u8, bridge_js.len, 0);
         defer self.allocator.free(null_terminated);
@@ -57,11 +57,11 @@ pub const QuarkWindow = struct {
         try errors.checkError(webview.webview_bind(self.handle, "quark_bridge_handler", bridge_handler.bridge_callback, null));
     }
 
-    fn set_title(self: *Self) WebViewError!void {
+    fn setTitle(self: *Self) WebViewError!void {
         return errors.checkError(webview.webview_set_title(self.handle, self.config.title));
     }
 
-    fn setup_gvfs(self: *Self) !void {
+    fn setupGVFS(self: *Self) !void {
         var vfs = try @import("vfs/backend/qvfs.zig").QuarkVirtualFileSystem.init(self.allocator);
         defer vfs.deinit();
 
@@ -75,7 +75,7 @@ pub const QuarkWindow = struct {
         try errors.checkError(webview.webview_init(self.handle, null_terminated.ptr));
     }
 
-    fn load_entrypoint(self: *Self) !void {
+    fn loadEntryPoint(self: *Self) !void {
         const html_content = frontend.get("index.html") orelse return WebViewError.Unspecified;
         const null_terminated = try self.allocator.allocSentinel(u8, html_content.len, 0);
         defer self.allocator.free(null_terminated);
@@ -84,7 +84,7 @@ pub const QuarkWindow = struct {
         try errors.checkError(webview.webview_set_html(self.handle, null_terminated.ptr));
     }
 
-    fn set_size(self: Self) WebViewError!void {
+    fn setSize(self: Self) WebViewError!void {
         return errors.checkError(webview.webview_set_size(
             self.handle,
             @intCast(self.config.width),
@@ -100,7 +100,7 @@ pub const QuarkWindow = struct {
         return errors.checkError(webview.webview_run(self.handle));
     }
 
-    pub fn destroy(self: *Self) !void {
+    pub fn destroy(self: *Self) WebViewError!void {
         try errors.checkError(webview.webview_destroy(self.handle));
         bridge_handler.deinit();
         _ = global_gpa.deinit();

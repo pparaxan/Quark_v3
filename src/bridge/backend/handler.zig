@@ -21,7 +21,7 @@ pub fn deinit() void {
     }
 }
 
-pub fn bridge_callback(_: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) callconv(.C) void {
+pub fn bridgeCallback(_: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) callconv(.C) void {
     _ = arg;
 
     const request = std.mem.span(req);
@@ -42,15 +42,15 @@ pub fn bridge_callback(_: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) cal
                 std.log.err("Failed to parse inner bridge message: {}", .{err});
                 return;
             };
-            handle_command(inner_parsed.value, temp_allocator);
+            handleCommand(inner_parsed.value, temp_allocator);
             return;
         }
     }
 
-    handle_command(parsed.value, temp_allocator);
+    handleCommand(parsed.value, temp_allocator);
 }
 
-fn handle_command(root: std.json.Value, temp_allocator: std.mem.Allocator) void {
+fn handleCommand(root: std.json.Value, temp_allocator: std.mem.Allocator) void {
     if (root != .object) {
         std.log.err("Bridge message is not a JSON object", .{});
         return;
