@@ -20,26 +20,26 @@ pub const WindowConfig = struct {
         return Self{};
     }
 
-    pub fn with_title(self: Self, new_title: [:0]const u8) Self {
+    pub fn withTitle(self: Self, new_title: [:0]const u8) Self {
         var config = self;
         config.title = new_title;
         return config;
     }
 
-    pub fn with_dimensions(self: Self, w: u16, h: u16) Self {
+    pub fn withDimensions(self: Self, w: u16, h: u16) Self {
         var config = self;
         config.width = w;
         config.height = h;
         return config;
     }
 
-    pub fn with_size_hint(self: Self, hint: WindowHint) Self {
+    pub fn withSizeHint(self: Self, hint: WindowHint) Self {
         var config = self;
         config.size_hint = hint;
         return config;
     }
 
-    pub fn with_debug(self: Self, enable: bool) Self {
+    pub fn withDebug(self: Self, enable: bool) Self {
         var config = self;
         config.debug_mode = enable;
         return config;

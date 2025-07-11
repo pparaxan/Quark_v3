@@ -1,0 +1,72 @@
+@keyframes fade {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+@font-face {
+    font-family: 'Fredoka';
+    src: url('assets/Fonts/Fredoka/Fredoka.ttf');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+    font-family: 'Fredoka';
+    background-image: url('assets/Gradient.svg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+body {
+    display: flex;
+    align-items: center;
+    animation: fade 1s ease-in;
+}
+
+#container {
+    background-color: black;
+    padding: 2rem 1rem;
+    border-radius: 1rem;
+    width: 90%;
+    max-width: 500px;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+h1 {
+    color: pink;
+    font-size: 2.5em;
+    margin-bottom: 0%;
+}
+
+.info-card {
+    background: #282a36;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 15px 0;
+}
+
+.info {
+    font-size: 14px;
+    color: #FFFFFFAB;
+    margin-bottom: 5px;
+}
+
+#kernel-value,
+#distro-value {
+    color: white;
+}
+
+.scan-btn {
+    background: pink;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 20px auto;
+}
