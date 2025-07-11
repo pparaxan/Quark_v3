@@ -58,12 +58,12 @@ fn handleCommand(root: std.json.Value, temp_allocator: std.mem.Allocator) void {
 
     const obj = root.object;
     const command_value = obj.get("command") orelse {
-        std.log.err("No command found in bridge message", .{});
+        std.log.err("No command found in the bridge message", .{});
         return;
     };
 
     if (command_value != .string) {
-        std.log.err("Command value is not a string", .{});
+        std.log.err("Command value isn't a string", .{});
         return;
     }
 
@@ -84,14 +84,14 @@ fn handleCommand(root: std.json.Value, temp_allocator: std.mem.Allocator) void {
     }
 
     if (handler == null) {
-        std.log.err("Command '{s}' not found in registry", .{command});
-        responses.sendUnsuccessfulResponse(id, "Command not found") catch {};
+        std.log.err("The '{s}' command wasn't found in the registry.", .{command});
+        responses.sendUnsuccessfulResponse(id, "Command wasn't found.") catch {};
         return;
     }
 
     const payload_json = std.json.stringifyAlloc(temp_allocator, payload, .{ .whitespace = .minified }) catch |err| {
         std.log.err("Failed to serialize payload: {}", .{err});
-        responses.sendUnsuccessfulResponse(id, "Failed to serialize payload") catch {};
+        responses.sendUnsuccessfulResponse(id, "Failed to serialize payload.") catch {};
         return;
     };
 
@@ -99,6 +99,6 @@ fn handleCommand(root: std.json.Value, temp_allocator: std.mem.Allocator) void {
 
     responses.sendSuccessfulResponse(id, result) catch |err| {
         std.log.err("Failed to send successful response: {}", .{err});
-        responses.sendUnsuccessfulResponse(id, "Failed to send response") catch {};
+        responses.sendUnsuccessfulResponse(id, "Failed to send response.") catch {};
     };
 }

@@ -65,7 +65,7 @@ pub const QuarkWindow = struct {
         var vfs = try @import("vfs/backend/qvfs.zig").QuarkVirtualFileSystem.init(self.allocator);
         defer vfs.deinit();
 
-        const js_injection = try vfs.generate_injection_code();
+        const js_injection = try vfs.generateInjectionCode();
         defer self.allocator.free(js_injection);
 
         const null_terminated = try self.allocator.allocSentinel(u8, js_injection.len, 0);

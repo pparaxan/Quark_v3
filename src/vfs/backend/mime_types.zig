@@ -77,7 +77,7 @@ const MimeDatabase = [_]MimeMapping{
     .{ .extensions = &.{".7z"}, .mime_type = "application/x-7z-compressed" },
 };
 
-pub fn detect_mime_type(filename: []const u8) []const u8 {
+pub fn detectMimeType(filename: []const u8) []const u8 {
     for (MimeDatabase) |mapping| {
         for (mapping.extensions) |extensions| {
             if (std.mem.endsWith(u8, filename, extensions)) {

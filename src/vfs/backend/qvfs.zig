@@ -26,7 +26,7 @@ pub const QuarkVirtualFileSystem = struct {
         self.asset_registry.deinit();
     }
 
-    pub fn generate_injection_code(self: *Self) ![]u8 {
+    pub fn generateInjectionCode(self: *Self) ![]u8 {
         for (frontend_modules) |module| {
             try self.asset_registry.appendSlice(module);
             try self.asset_registry.append('\n');
@@ -43,7 +43,7 @@ pub const QuarkVirtualFileSystem = struct {
         const base64_data = try self.encodeBase64(content);
         defer self.allocator.free(base64_data);
 
-        const mime_type = mime_types.detect_mime_type(file_name);
+        const mime_type = mime_types.detectMimeType(file_name);
 
         try self.asset_registry.writer().print(
             \\

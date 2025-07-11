@@ -61,6 +61,7 @@ pub const ResponseQueue = struct {
         return self.responses.orderedRemove(0);
     }
 };
+
 fn sendResponse(id: []const u8, data: []const u8, is_success: bool) !void {
     var temp_arena = std.heap.ArenaAllocator.init(api.global_allocator);
     defer temp_arena.deinit();
