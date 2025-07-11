@@ -54,7 +54,7 @@ pub const QuarkWindow = struct {
         @memcpy(null_terminated, bridge_js);
 
         try errors.checkError(webview.webview_init(self.handle, null_terminated.ptr));
-        try errors.checkError(webview.webview_bind(self.handle, "quark_bridge_handler", bridge_handler.bridge_callback, null));
+        try errors.checkError(webview.webview_bind(self.handle, "quark_bridge_handler", bridge_handler.bridgeCallback, null));
     }
 
     fn setTitle(self: *Self) WebViewError!void {
