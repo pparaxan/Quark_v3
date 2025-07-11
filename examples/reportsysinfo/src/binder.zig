@@ -16,7 +16,6 @@ pub const resources = [_]EmbeddedResource{
     .{ .file = "assets/Fonts/Fredoka/OFL.txt", .path = @embedFile("src_quark/assets/Fonts/Fredoka/OFL.txt") },
     .{ .file = "assets/Fonts/Fredoka/Fredoka.ttf", .path = @embedFile("src_quark/assets/Fonts/Fredoka/Fredoka.ttf") },
     .{ .file = "assets/Gradient.svg", .path = @embedFile("src_quark/assets/Gradient.svg") },
-    .{ .file = "style.css.bk", .path = @embedFile("src_quark/style.css.bk") },
     .{ .file = "style.css", .path = @embedFile("src_quark/style.css") },
     .{ .file = "script.js", .path = @embedFile("src_quark/script.js") },
     .{ .file = "index.html", .path = @embedFile("src_quark/index.html") },

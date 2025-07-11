@@ -1,6 +1,7 @@
 const std = @import("std");
 const libquark = @import("quark");
-// const libcrosssys = @import("crosssys"); // Linux only (for now); build.zig's broken.
+const libcrosssys = @import("crosssys");
+const builtin = @import("builtin").os.tag;
 
 pub fn main() !void {
     const config = libquark.WindowConfig.init()
@@ -14,20 +15,39 @@ pub fn main() !void {
     try libquark.execute_window(&window);
 }
 
-fn get_info(allocator: std.mem.Allocator, _: []const u8) []const u8 {
-    // _ = allocator;
-    const distro = "Arch Linux";
-    const kernel = "6.15.5-1-catgirl-edition"; // https://github.com/a-catgirl-dev/linux-catgirl-edition
-    // const distro = libcrosssys.distro.main();
-    // const kernel = libcrosssys.kernel.main();
+fn getDistroInfo() ![]const u8 {
+    return switch (builtin) {
+        .linux => libcrosssys.distro.Linux.getDistro(),
+        // .windows => libcrosssys.cs.distro.Windows.getDistro(),
+        // .macos => libcrosssys.cs.distro.MacOS.getDistro(),
+        // .freebsd, .openbsd, .netbsd, .dragonfly => libcrosssys.cs.distro.BSD.getDistro(),
+        else => error.UnsupportedOSForCrossSys,
+    };
+}
 
-    // Use a static buffer or ensure the returned string is properly managed
+fn getKernelInfo() ![]const u8 {
+    return switch (builtin) {
+        .linux => libcrosssys.kernel.Linux.getKernel(),
+        // .windows => libcrosssys.kernel.Windows.getKernel(),
+        // .macos => libcrosssys.kernel.MacOS.getKernel(),
+        // .freebsd, .openbsd, .netbsd, .dragonfly => libcrosssys.kernel.BSD.getKernel(),
+        else => error.UnsupportedOSForCrossSys,
+    };
+}
+
+fn get_info(allocator: std.mem.Allocator, _: []const u8) []const u8 {
+    const distro = getDistroInfo() catch "Unknown";
+    const kernel = getKernelInfo() catch "Unknown";
+
+    const distro_str = std.mem.sliceTo(distro, 0);
+    const kernel_str = std.mem.sliceTo(kernel, 0);
+
     const result = std.fmt.allocPrint(allocator,
         \\{{
         \\  "distro": "{s}",
         \\  "kernel": "{s}"
         \\}}
-    , .{ distro, kernel }) catch |err| @errorName(err);
+    , .{ distro_str, kernel_str }) catch |err| @errorName(err);
 
     return result;
 }

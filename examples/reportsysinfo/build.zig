@@ -5,7 +5,7 @@ pub fn build(b: *@import("std").Build) void {
     });
 
     const lib_quark = b.dependency("quark", .{});
-    // const lib_crosssys = b.dependency("crosssys", .{});
+    const lib_crosssys = b.dependency("crosssys", .{});
 
     const executable = b.addExecutable(.{
         .name = "reportsysinfo",
@@ -15,9 +15,9 @@ pub fn build(b: *@import("std").Build) void {
     });
 
     executable.root_module.addImport("quark", lib_quark.module("libquark"));
-    // executable.root_module.addImport("crosssys", lib_crosssys.module("libcrosssys"));
+    executable.root_module.addImport("crosssys", lib_crosssys.module("libcrosssys"));
     executable.linkLibrary(lib_quark.artifact("quark"));
-    // executable.linkLibrary(lib_crosssys.artifact("crosssys"));
+    executable.linkLibrary(lib_crosssys.artifact("crosssys"));
 
     b.installArtifact(executable);
 
