@@ -3,7 +3,7 @@ const std = @import("std");
 pub fn platform(libquark: *std.Build.Step.Compile, lib_webview: *std.Build.Dependency, lib_webview2: *std.Build.Dependency) !void {
     libquark.addIncludePath(lib_webview.path("core/include/"));
     libquark.addIncludePath(lib_webview.path("core/include/webview/"));
-    libquark.root_module.addCMacro("WEBVIEW_SHARED", "1"); // WEBVIEW_STATIC > WEBVIEW_SHARED
+    libquark.root_module.addCMacro("WEBVIEW_STATIC", "1");
     libquark.linkLibCpp();
 
     switch (@import("builtin").os.tag) {

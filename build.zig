@@ -22,7 +22,7 @@ pub fn build(b: *std.Build) !void {
             .target = target,
             .optimize = optimize,
         }),
-        .linkage = .dynamic,
+        .linkage = .static,
     });
 
     try p.platform(libquark, lib_webview, lib_webview2);
