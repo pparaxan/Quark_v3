@@ -1,16 +1,16 @@
 .{
     .name = .quark,
-    .version = "5.0.0",
+    .version = "5.1.0",
     .fingerprint = 0xd00d6c7f4552224e,
     .minimum_zig_version = "0.14.0",
-    .dependencies = .{ .webview = .{
-        .url = "https://github.com/webview/webview/archive/refs/tags/0.12.0.tar.gz",
-        .hash = "122000cad401fdc8175c1c82be38a906f0ea3c8a9e2a85f2670e5c69f224407db464",
-    }, .webview2 = .{
-        .url = "https://github.com/pparaxan/Microsoft.Web.WebView2/archive/refs/tags/v1.0.3344-prerelease.tar.gz",
-        .hash = "N-V-__8AANwDVwM9eeAjcloTEtaOH_u5OgReZG5eFT4LPn6Y",
-    } },
-
+    .dependencies = .{
+        .webview = .{ .url = "https://github.com/webview/webview/archive/f9cbb69abe5d875bb7c4bafe8329340462ad1ca9.zip", .hash = "N-V-__8AAP3oCgBq902S9Gi5W1xGFXEel-giSStK-yict2th" },
+        .webview2 = .{
+            .url = "https://github.com/pparaxan/WebView2/archive/refs/tags/v1.0.3351.48.zip",
+            .hash = "N-V-__8AAExTtwLbHDcuL3o2OT6n7ii2A9HR43PO7kUO2rw2"
+        },
+        .binder = .{ .url = "https://codeberg.org/pparaxan/binder/archive/v2.0.1.tar.gz", .hash = "binder-1.0.0-KglZgfEXAADShghDw00QxgE2b5ctFYPUML2Icdwybk8u" },
+    },
     .paths = .{
         "build.zig",
         "build.zig.zon",

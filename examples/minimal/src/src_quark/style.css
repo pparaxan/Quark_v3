@@ -1,0 +1,52 @@
+@keyframes fade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@font-face {
+  font-family: "Fredoka";
+  src: url("assets/Fonts/Fredoka/Fredoka.ttf");
+  font-weight: normal;
+  font-style: normal;
+}
+
+body,
+html {
+  height: 100%;
+  margin: 0;
+  font-family: "Fredoka";
+  background-image: url("assets/Gradient.svg");
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+body {
+  display: flex;
+  align-items: center;
+  animation: fade 1s ease-in;
+}
+
+#container {
+  background-color: black;
+  padding: 2rem 1rem;
+  border-radius: 1rem;
+  width: 90%;
+  max-width: 500px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+h1 {
+  color: pink;
+  font-size: 2.5em;
+  margin-bottom: 0%;
+}
+
+p {
+  color: #ffffffab;
+  margin-bottom: 1.5em;
+}

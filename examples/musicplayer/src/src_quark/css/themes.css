@@ -1,0 +1,13 @@
+:root {
+  /* Default */
+  --background-color: #414559;
+  --bar-color: #a5adce;
+  --bar-thumb-color: #a5adce;
+  --button: #51576d;
+  --button-hover: #626880;
+  --icon-default: #fff;
+  --icon-default_black: #000;
+  --player-color: #51576d;
+  --subtext-color: #888;
+  --text-color: #f8f8f2;
+}

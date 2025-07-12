@@ -1,0 +1,81 @@
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  format-backend:
+    runs-on: codeberg-tiny
+    container:
+      image: "archlinux:base"
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu zig git nodejs --noconfirm # nodejs is required for `actions/checkout@v4`, it's dumb I know.
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CODEBERG_TOKEN }}
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config --global user.name "Forgejo Actions"
+          git config --global user.email "john@example.com"
+      - name: Format backend code
+        run: |
+          find . -name "*.zig" -exec zig fmt {} \;
+          find . -name "*.zig.zon" -exec zig fmt {} \;
+      - name: Check for changes
+        id: verify
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Files have been formatted, proceeding with commit..."
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No files has been formatted, skipping commit..."
+          fi
+      - name: Commit and push changes
+        if: steps.verify.outputs.changed == 'true'
+        run: | # Backend: Zig
+          git add .
+          git commit -m "style: fmt backend [skip ci]"
+          git push
+  format-frontend:
+    runs-on: codeberg-tiny
+    needs: format-backend
+    container:
+      image: "archlinux:base"
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu git nodejs npm --noconfirm
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CODEBERG_TOKEN }}
+          fetch-depth: 0
+      - name: Configure Git
+        run: |
+          git config --global user.name "Forgejo Actions"
+          git config --global user.email "john@example.com"
+      - name: Install Prettier
+        run: npm install -g prettier
+      - name: Format frontend files
+        run: |
+          find . -name "*.html" -exec prettier --write {} \;
+          find . -name "*.css" -exec prettier --write {} \;
+          find . -name "*.js" -exec prettier --write {} \;
+      - name: Check for changes
+        id: verify
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "Files have been formatted, proceeding with commit..."
+          else
+            echo "changed=false" >> $GITHUB_OUTPUT
+            echo "No files has been formatted, skipping commit..."
+          fi
+      - name: Commit and push changes
+        if: steps.verify.outputs.changed == 'true'
+        run: | # frontend: HTML, CSS, JS
+          git add .
+          git commit -m "style: fmt frontend [skip ci]"
+          git push
