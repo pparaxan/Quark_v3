@@ -5,10 +5,7 @@
     .minimum_zig_version = "0.14.0",
     .dependencies = .{
         .webview = .{ .url = "https://github.com/webview/webview/archive/f9cbb69abe5d875bb7c4bafe8329340462ad1ca9.zip", .hash = "N-V-__8AAP3oCgBq902S9Gi5W1xGFXEel-giSStK-yict2th" },
-        .webview2 = .{
-            .url = "https://github.com/pparaxan/WebView2/archive/refs/tags/v1.0.3351.48.zip",
-            .hash = "N-V-__8AAExTtwLbHDcuL3o2OT6n7ii2A9HR43PO7kUO2rw2"
-        },
+        .webview2 = .{ .url = "https://github.com/pparaxan/WebView2/archive/refs/tags/v1.0.3351.48.zip", .hash = "N-V-__8AAExTtwLbHDcuL3o2OT6n7ii2A9HR43PO7kUO2rw2" },
         .binder = .{ .url = "https://codeberg.org/pparaxan/binder/archive/v2.0.1.tar.gz", .hash = "binder-1.0.0-KglZgfEXAADShghDw00QxgE2b5ctFYPUML2Icdwybk8u" },
     },
     .paths = .{

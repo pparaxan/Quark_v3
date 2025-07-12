@@ -14,11 +14,20 @@ pub fn modules(b: *std.Build, lib_webview: *std.Build.Dependency, lib_webview2: 
         .target = target,
     }).createModule();
 
-    const webview2_mod = b.addTranslateC(.{
+    const webview2_translate = b.addTranslateC(.{
         .root_source_file = lib_webview2.path("build/native/include/WebView2.h"),
         .optimize = optimize,
         .target = target,
-    }).createModule();
+    });
+
+    if (target.result.os.tag == .windows) { // Windows is stupid i'm sorry.
+        webview2_translate.addSystemIncludePath(.{ .cwd_relative = "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\winrt" });
+        webview2_translate.addSystemIncludePath(.{ .cwd_relative = "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\um" });
+        webview2_translate.addSystemIncludePath(.{ .cwd_relative = "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\shared" });
+        webview2_translate.addSystemIncludePath(.{ .cwd_relative = "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\ucrt" });
+    }
+
+    const webview2_mod = webview2_translate.createModule();
 
     const frontend_mod = b.createModule(.{
         .root_source_file = .{ .cwd_relative = frontend },
