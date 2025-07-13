@@ -1,0 +1,26 @@
+{
+  "show_edit_predictions": true,
+  "format_on_save": "on",
+  "lsp": {
+    "zls": {
+      // "binary": {
+      //   "path": "/usr/bin/zls"
+      // }
+    }
+  },
+  "languages": {
+    "Zig": {
+      "language_servers": ["zls"]
+    },
+    "JavaScript": {
+      "formatter": {
+        "external": {
+          "command": "prettier",
+          "arguments": ["--stdin-filepath", "{buffer_path}"]
+        }
+      }
+    }
+  },
+  "autosave": "on_window_change",
+  "soft_wrap": "editor_width"
+}
