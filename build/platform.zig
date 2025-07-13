@@ -1,17 +1,30 @@
 const std = @import("std");
+const utils = @import("utils.zig");
 
-pub fn platform(libquark: *std.Build.Step.Compile, lib_webview: *std.Build.Dependency) !void {
+pub fn platform(b: *std.Build, libquark: *std.Build.Step.Compile, lib_webview: *std.Build.Dependency, lib_webview2: *std.Build.Dependency) !void {
     libquark.addIncludePath(lib_webview.path("core/include/"));
     libquark.addIncludePath(lib_webview.path("core/include/webview/"));
-    libquark.root_module.addCMacro("WEBVIEW_SHARED", "1"); // WEBVIEW_STATIC > WEBVIEW_SHARED
+    libquark.root_module.addCMacro("WEBVIEW_STATIC", "1");
     libquark.linkLibCpp();
 
     switch (@import("builtin").os.tag) {
+        .windows => {
+            const sdk = try utils.getWindowsSDKPath(b.allocator);
+            const winrt = try std.fmt.allocPrint(b.allocator, "{s}\\winrt", .{sdk});
+
+            libquark.addIncludePath(lib_webview2.path("build/native/include/"));
+            libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++14"} });
+            libquark.addIncludePath(.{ .cwd_relative = winrt });
+
+            libquark.linkSystemLibrary("version");
+            libquark.linkSystemLibrary("ole32");
+            libquark.linkSystemLibrary("shlwapi");
+        },
         .macos => {
             libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             libquark.linkFramework("WebKit");
         },
-        .freebsd => { // not tested, clean up.
+        .freebsd => {
             libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/cairo/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/gtk-3.0/" });
