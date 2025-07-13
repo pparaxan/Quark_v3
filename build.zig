@@ -11,8 +11,9 @@ pub fn build(b: *std.Build) !void {
 
     const deps = try d.dependencies(b);
     const lib_webview = deps[0];
+    const lib_webview2 = deps[1];
 
-    try m.modules(b, lib_webview, target, optimize);
+    try m.modules(b, lib_webview, lib_webview2, target, optimize);
 
     const libquark = b.addLibrary(.{
         .name = "quark",
@@ -21,10 +22,10 @@ pub fn build(b: *std.Build) !void {
             .target = target,
             .optimize = optimize,
         }),
-        .linkage = .dynamic,
+        .linkage = .static,
     });
 
-    try p.platform(libquark, lib_webview);
+    try p.platform(b, libquark, lib_webview, lib_webview2);
 
     b.installArtifact(libquark);
 }
