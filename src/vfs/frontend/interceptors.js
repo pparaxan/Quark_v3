@@ -1,10 +1,12 @@
+// [..]
+
 (function () {
   "use strict";
 
   const originalFetch = window.fetch;
   const originalCreateElement = document.createElement;
 
-  // Intercept fetch requests for virtual assets
+  // Hook fetch to return QVFS content for virtual URLs
   window.fetch = function (resource, options) {
     const url = resource.toString();
 
@@ -15,7 +17,7 @@
     return originalFetch.call(this, resource, options);
   };
 
-  // Intercept DOM element creation for asset loading
+  // Intercept DOM asset creation (link/script)
   document.createElement = function (tagName) {
     const element = originalCreateElement.call(this, tagName);
 
@@ -28,6 +30,7 @@
     return element;
   };
 
+  // Determine if an asset should be handled by QVFS
   function isVirtualAsset(url) {
     return (
       !url.startsWith("http") &&
@@ -36,6 +39,7 @@
     );
   }
 
+  // Wrap virtual asset in a Response for fetch()
   function createVirtualResponse(url) {
     const asset = window.__QUARK_VFS__[url];
     const assetBlob = createAssetBlob(asset);
@@ -47,10 +51,11 @@
         headers: {
           "Content-Type": asset.mimeType,
         },
-      }),
+      })
     );
   }
 
+  // Rewrite stylesheet href to a blob URL, and hook `load` to process it
   function interceptLinkElement(linkElement) {
     const originalSetAttribute = linkElement.setAttribute;
     let isStylesheet = false;
@@ -74,6 +79,7 @@
     };
   }
 
+  // Rewrite script src to blob URL if it’s found in the QVFS
   function interceptScriptElement(scriptElement) {
     const originalSetAttribute = scriptElement.setAttribute;
 
@@ -89,10 +95,10 @@
     };
   }
 
+  // Base64 string → Blob for use in DOM and fetch()
   function createAssetBlob(asset) {
     const byteCharacters = atob(asset.content);
     const byteNumbers = new Array(byteCharacters.length);
-
     for (let i = 0; i < byteCharacters.length; i++) {
       byteNumbers[i] = byteCharacters.charCodeAt(i);
     }

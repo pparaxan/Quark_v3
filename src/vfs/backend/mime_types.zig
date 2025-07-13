@@ -1,3 +1,7 @@
+//! This module provides MIME type detection functionality based on file extensions,
+//! maintaining a comprehensive database of common file types and their corresponding
+//! MIME types for proper content handling in web applications.
+
 const std = @import("std");
 
 const MimeMapping = struct {
@@ -77,6 +81,8 @@ const MimeDatabase = [_]MimeMapping{
     .{ .extensions = &.{".7z"}, .mime_type = "application/x-7z-compressed" },
 };
 
+/// Function used to detect the MIME type of a file. Returns the first
+/// matching MIME type from the database based on file extension.
 pub fn detectMimeType(filename: []const u8) []const u8 {
     for (MimeDatabase) |mapping| {
         for (mapping.extensions) |extensions| {

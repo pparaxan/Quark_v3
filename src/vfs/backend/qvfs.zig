@@ -1,3 +1,7 @@
+//! This module provides a virtual file system for embedding frontend assets
+//! directly into the Zig application, handling Base64 encoding and JavaScript
+//! injection code generation for the frontend.
+
 const std = @import("std");
 const mime_types = @import("mime_types.zig");
 const frontend = @import("frontend");
@@ -9,12 +13,17 @@ const frontend_modules = [_][]const u8{
     @embedFile("../frontend/cssProcessor.js"),
 };
 
+/// This struct provides a virtual in-memory file system that embeds
+/// static assets that's found via [binder](https://codeberg.org/pparaxan/binder)
+/// to be encoded into base64 encoded strings within a global
+/// JavaScript object `window.__QUARK_VFS__`.
 pub const QuarkVirtualFileSystem = struct {
     allocator: std.mem.Allocator,
     asset_registry: std.ArrayList(u8),
 
     const Self = @This();
 
+    /// Initializes the QVFS instance
     pub fn init(allocator: std.mem.Allocator) !Self {
         return Self{
             .allocator = allocator,
@@ -22,10 +31,12 @@ pub const QuarkVirtualFileSystem = struct {
         };
     }
 
-    pub fn deinit(self: *Self) void {
-        self.asset_registry.deinit();
-    }
-
+    /// Generate JavaScript injection code that registers all frontend assets
+    /// in the webview's global `window.__QUARK_VFS__` object.
+    ///
+    /// This method processes all frontend assets, encoding them as Base64
+    /// and creating a JavaScript object structure that can be injected
+    /// into the WebView as URL blobs.
     pub fn generateInjectionCode(self: *Self) ![]u8 {
         for (frontend_modules) |module| {
             try self.asset_registry.appendSlice(module);
@@ -39,6 +50,11 @@ pub const QuarkVirtualFileSystem = struct {
         return try self.allocator.dupe(u8, self.asset_registry.items);
     }
 
+    /// Register a single asset by encoding its content as Base64 and generating
+    /// the corresponding JavaScript object entry.
+    ///
+    /// The generated code includes the content as a base64 string, its MIME type,
+    /// and the original content size.
     fn registerAssets(self: *Self, file_name: []const u8, content: []const u8) !void {
         const base64_data = try self.encodeBase64(content);
         defer self.allocator.free(base64_data);
@@ -56,6 +72,7 @@ pub const QuarkVirtualFileSystem = struct {
         , .{ file_name, base64_data, mime_type, content.len });
     }
 
+    /// Encode binary data as Base64 using the standard Base64 alphabet.
     fn encodeBase64(self: *Self, data: []const u8) ![]u8 {
         const encoder = std.base64.standard.Encoder;
         const encoded_size = encoder.calcSize(data.len);

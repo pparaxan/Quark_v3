@@ -5,13 +5,9 @@ const std = @import("std");
 /// These hints control how the user can interact with the window size,
 /// mapping to the underlying webview implementation constraints.
 pub const WindowHint = enum(c_uint) {
-    /// Window can be freely resized by the user
     resizable = 0,
-    /// Window has a minimum size constraint
     min_size = 1,
-    // /// Window has a maximum size constraint
     // max_size = 2, // webkitgtk-6.0 doesn't support this.
-    /// Window size is fixed and cannot be changed
     fixed_size = 3,
 };
 
@@ -21,10 +17,7 @@ pub const WindowHint = enum(c_uint) {
 /// including dimensions, title, and resize behavior.
 ///
 /// Example:
-///   const config = WindowConfig.init()
-///       .withTitle("My App")
-///       .withDimensions(1024, 768)
-///       .withSizeHint(WindowHint.fixed_size);
+///   const config = WindowConfig.init().withTitle("My App").withDimensions(1024, 768).withSizeHint(WindowHint.fixed_size);
 pub const WindowConfig = struct {
     /// Window title displayed in the title bar
     title: [:0]const u8 = "Quark Application",

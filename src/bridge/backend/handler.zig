@@ -1,3 +1,7 @@
+//! This module handles incoming messages from the frontend, parsing
+//! JSON payloads, routing commands to registered handlers, and managing
+//! the command execution lifecycle.
+
 const std = @import("std");
 const webview = @import("webview");
 const responses = @import("responses.zig");
@@ -6,6 +10,8 @@ const errors = @import("../../errors.zig");
 const WebViewError = errors.WebViewError;
 const api = @import("api.zig");
 
+/// Initializes the bridge handler. Sets up the global command registry
+/// and response queue required for bridge operation. Must be called before any bridge operations.
 pub fn init(allocator: std.mem.Allocator) void {
     if (api.global_commands == null) {
         api.global_commands = std.ArrayList(api.CommandEntry).init(allocator);
@@ -14,6 +20,8 @@ pub fn init(allocator: std.mem.Allocator) void {
     responses.pending_responses = responses.ResponseQueue.init(allocator);
 }
 
+/// Deinitializes the response queue and frees associated memory.
+/// Should be called when the bridge is no longer needed.
 pub fn deinit() void {
     if (responses.pending_responses) |*queue| {
         queue.deinit();
@@ -21,6 +29,11 @@ pub fn deinit() void {
     }
 }
 
+/// [C] Callback function for handling bridge messages from the frontend.
+///
+/// This is the main entry point for all frontend-to-backend communication.
+/// It receives raw JSON messages from the frontend, parses them, and routes
+/// them to the appropriate command handlers.
 pub fn bridgeCallback(_: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) callconv(.C) void {
     _ = arg;
 
@@ -50,6 +63,10 @@ pub fn bridgeCallback(_: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) call
     handleCommand(parsed.value, temp_allocator);
 }
 
+/// Processes a parsed command message and executes the appropriate handler.
+///
+/// Extracts command name, payload, and ID from the JSON message, locates
+/// the registered handler, and executes it with the provided payload.
 fn handleCommand(root: std.json.Value, temp_allocator: std.mem.Allocator) void {
     if (root != .object) {
         std.log.err("Bridge message is not a JSON object", .{});

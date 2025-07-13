@@ -24,11 +24,8 @@ var global_gpa: std.heap.GeneralPurposeAllocator(.{
 /// window (webview) creation, bridge between the back and fontend, virtual file
 /// system integration, and event loop execution.
 pub const QuarkWindow = struct {
-    /// Native webview handle
     handle: webview.webview_t,
-    /// Window configuration settings
     config: config.WindowConfig,
-    /// Memory allocator for window operations
     allocator: std.mem.Allocator,
 
     const Self = @This();
@@ -94,7 +91,7 @@ pub const QuarkWindow = struct {
     // Work on this
     fn setupGVFS(self: *Self) !void {
         var vfs = try @import("vfs/backend/qvfs.zig").QuarkVirtualFileSystem.init(self.allocator);
-        defer vfs.deinit();
+        defer vfs.asset_registry.deinit();
 
         const js_injection = try vfs.generateInjectionCode();
         defer self.allocator.free(js_injection);

@@ -1,3 +1,7 @@
+//! This module manages the response lifecycle for bridged commands, including
+//! queuing, delivery. It provides both successful and error responses used to
+//! be sent to frontend.
+
 const std = @import("std");
 const handler = @import("handler.zig");
 const errors = @import("../../errors.zig");
@@ -7,11 +11,16 @@ const webview = @import("webview");
 
 pub var pending_responses: ?ResponseQueue = null;
 
+/// This struct holds responses Quark will send to the frontend, from the backend.
+/// It provides a concurrent-safe mechanism for queuing and delivering
+/// responses to the frontend, also includes timestamp tracking for
+/// debugging and monitoring purposes.
 pub const ResponseQueue = struct {
     responses: std.ArrayList(PendingResponse),
     mutex: std.Thread.Mutex,
     allocator: std.mem.Allocator,
 
+    /// This struct represents one queued response
     pub const PendingResponse = struct {
         id: []const u8,
         data: []const u8,
@@ -19,6 +28,7 @@ pub const ResponseQueue = struct {
         timestamp: i64,
     };
 
+    /// Sets up the response queue with the specified allocator.
     pub fn init(allocator: std.mem.Allocator) ResponseQueue {
         return ResponseQueue{
             .responses = std.ArrayList(PendingResponse).init(allocator),
@@ -27,6 +37,7 @@ pub const ResponseQueue = struct {
         };
     }
 
+    /// Cleans up the response queue and frees all pending responses.
     pub fn deinit(self: *ResponseQueue) void {
         self.mutex.lock();
         defer self.mutex.unlock();
@@ -38,6 +49,7 @@ pub const ResponseQueue = struct {
         self.responses.deinit();
     }
 
+    /// Adds a response to the queue in a thread-safe manner.
     pub fn push(self: *ResponseQueue, id: []const u8, data: []const u8, is_error: bool) !void {
         self.mutex.lock();
         defer self.mutex.unlock();
@@ -53,6 +65,7 @@ pub const ResponseQueue = struct {
         });
     }
 
+    /// Retrieves and removes the next response from the queue.
     pub fn poll(self: *ResponseQueue) ?PendingResponse {
         self.mutex.lock();
         defer self.mutex.unlock();
@@ -62,6 +75,9 @@ pub const ResponseQueue = struct {
     }
 };
 
+/// This function is used to construct the appropriate JavaScript code
+/// that'll deliver the response to the frontend. It escapes the ID and data,
+/// wraps it in a try-catch, and sends it to the window via `webview_eval`.
 fn sendResponse(id: []const u8, data: []const u8, is_success: bool) !void {
     var temp_arena = std.heap.ArenaAllocator.init(api.global_allocator);
     defer temp_arena.deinit();
@@ -82,10 +98,12 @@ fn sendResponse(id: []const u8, data: []const u8, is_success: bool) !void {
     try errors.checkError(webview.webview_eval(window_handle, null_terminated.ptr));
 }
 
+/// Public helper used to sends a successful response to the frontend.
 pub fn sendSuccessfulResponse(id: []const u8, data: []const u8) !void {
     try sendResponse(id, data, true);
 }
 
+/// Public helper used to sends a failed response to the frontend.
 pub fn sendUnsuccessfulResponse(id: []const u8, error_msg: []const u8) !void {
     try sendResponse(id, error_msg, false);
 }
