@@ -1,6 +1,7 @@
 const std = @import("std");
+const utils = @import("utils.zig");
 
-pub fn platform(libquark: *std.Build.Step.Compile, lib_webview: *std.Build.Dependency, lib_webview2: *std.Build.Dependency) !void {
+pub fn platform(b: *std.Build, libquark: *std.Build.Step.Compile, lib_webview: *std.Build.Dependency, lib_webview2: *std.Build.Dependency) !void {
     libquark.addIncludePath(lib_webview.path("core/include/"));
     libquark.addIncludePath(lib_webview.path("core/include/webview/"));
     libquark.root_module.addCMacro("WEBVIEW_STATIC", "1");
@@ -8,9 +9,12 @@ pub fn platform(libquark: *std.Build.Step.Compile, lib_webview: *std.Build.Depen
 
     switch (@import("builtin").os.tag) {
         .windows => {
+            const sdk = try utils.getWindowsSDKPath(b.allocator);
+            const winrt = try std.fmt.allocPrint(b.allocator, "{s}\\winrt", .{sdk});
+
             libquark.addIncludePath(lib_webview2.path("build/native/include/"));
             libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++14"} });
-            libquark.addIncludePath(.{ .cwd_relative = "C:\\Program Files (x86)\\Windows Kits\\10\\Include\\10.0.26100.0\\winrt" });
+            libquark.addIncludePath(.{ .cwd_relative = winrt });
 
             libquark.linkSystemLibrary("version");
             libquark.linkSystemLibrary("ole32");

@@ -25,7 +25,7 @@ pub fn build(b: *std.Build) !void {
         .linkage = .static,
     });
 
-    try p.platform(libquark, lib_webview, lib_webview2);
+    try p.platform(b, libquark, lib_webview, lib_webview2);
 
     b.installArtifact(libquark);
 }
