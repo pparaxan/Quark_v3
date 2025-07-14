@@ -8,7 +8,8 @@
 
 Quark is a compact and efficient library designed for building scalable web applications.
 
-If you're interested in making an application with Quark, check out the [documentation website](https://codeberg.org/pparaxan/Quark/wiki).
+<!-- If you're interested in making an application with Quark, check out the [documentation website](https://codeberg.org/pparaxan/Quark/wiki). -->
+<!-- ^ Website is no where complete -->
 
 ## Features
 
