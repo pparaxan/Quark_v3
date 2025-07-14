@@ -1,3 +1,4 @@
+// Scans a stylesheet's CSS rules and rewrites `url(...)` references to use blob URLs from QVFS
 function processCssStylesheet(stylesheet) {
   if (!stylesheet || !stylesheet.cssRules) return;
 
@@ -9,10 +10,12 @@ function processCssStylesheet(stylesheet) {
     ) {
       const cssRule = stylesheet.cssRules[ruleIndex];
 
+      // Only process style rules
       if (cssRule.style) {
         for (let cssProperty of cssRule.style) {
           const propertyValue = cssRule.style.getPropertyValue(cssProperty);
 
+          // Only process rules with a `url(...)` in them
           if (propertyValue.includes("url(")) {
             const processedValue = replaceCssUrlReferences(propertyValue);
 
@@ -28,27 +31,24 @@ function processCssStylesheet(stylesheet) {
   }
 }
 
+// Replaces `url(...)` in a CSS string with `url(blob:...)` if said asset exists in QVFS
 function replaceCssUrlReferences(cssValue) {
-  return cssValue.replace(
-    /url\(['"]?([^'")]+)['"]?\)/g,
-    function (fullMatch, assetUrl) {
-      if (window.__QUARK_VFS__[assetUrl]) {
-        const asset = window.__QUARK_VFS__[assetUrl];
-        const byteCharacters = atob(asset.content);
-        const byteNumbers = new Array(byteCharacters.length);
-
-        for (let i = 0; i < byteCharacters.length; i++) {
-          byteNumbers[i] = byteCharacters.charCodeAt(i);
-        }
-
-        const byteArray = new Uint8Array(byteNumbers);
-        const assetBlob = new Blob([byteArray], { type: asset.mimeType });
-        const blobUrl = URL.createObjectURL(assetBlob);
-
-        return "url(" + blobUrl + ")";
+  return cssValue.replace(/url\(['"]?([^'")]+)['"]?\)/g, function (fullMatch, assetUrl) {
+    const asset = window.__QUARK_VFS__[assetUrl];
+    if (asset) {
+      const byteCharacters = atob(asset.content);
+      const byteNumbers = new Array(byteCharacters.length);
+      for (let i = 0; i < byteCharacters.length; i++) {
+        byteNumbers[i] = byteCharacters.charCodeAt(i);
       }
 
-      return fullMatch;
-    },
-  );
+      const byteArray = new Uint8Array(byteNumbers);
+      const assetBlob = new Blob([byteArray], { type: asset.mimeType });
+      const blobUrl = URL.createObjectURL(assetBlob);
+
+      return "url(" + blobUrl + ")";
+    }
+
+    return fullMatch;
+  });
 }

@@ -1,3 +1,7 @@
+//! This module provides the fundamental bridge communication in Quark
+//! applications. It manages command registration, execution, and event
+//! emission across the front and backend boundary.
+
 const std = @import("std");
 const webview = @import("webview");
 const QuarkWindow = @import("../../window.zig").QuarkWindow;
@@ -17,6 +21,11 @@ pub const CommandEntry = struct {
     handler: CommandHandler,
 };
 
+/// Registers a backend function as a callable command from the frontend.
+///
+/// Commands registered with this function can be invoked from the frontend
+/// using the bridge system. The handler will receive JSON payload data and
+/// must return a JSON response string.
 pub fn register(name: []const u8, handler: CommandHandler) !void {
     const owned_name = try global_allocator.dupe(u8, name);
     errdefer global_allocator.free(owned_name);
@@ -26,6 +35,10 @@ pub fn register(name: []const u8, handler: CommandHandler) !void {
     });
 }
 
+/// Executes a JavaScript function in the frontend, from the backend.
+///
+/// This function allows backend code to call JavaScript functions in the
+/// frontend.
 pub fn call(window: *QuarkWindow, function_name: []const u8, args: []const u8) !void {
     if (window.handle == null) {
         return errors.WebViewError.Unspecified;
@@ -43,6 +56,10 @@ pub fn call(window: *QuarkWindow, function_name: []const u8, args: []const u8) !
     try errors.checkError(webview.webview_eval(window.handle, null_terminated.ptr));
 }
 
+/// Emits custom events to the frontend.
+///
+/// Events provide a way for the backend to push data/notifications to the
+/// frontend.
 pub fn emit(window: *QuarkWindow, event_name: []const u8, data: []const u8) !void {
     if (window.handle == null) {
         return errors.WebViewError.Unspecified;
