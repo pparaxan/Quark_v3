@@ -1,5 +1,3 @@
-//! Error handling for Quark operations.
-//!
 //! This module provides error mapping and checking functions to convert
 //! between the underlying webview library's C error codes and Zig's
 //! native error handling system.
@@ -28,7 +26,6 @@ pub const WebViewError = error{
     NotFound,
 };
 
-/// Maps webview library error codes to Zig WebViewError enum.
 pub fn mapWebviewError(err: anytype) WebViewError {
     return switch (err) {
         lib_webview.WEBVIEW_ERROR_MISSING_DEPENDENCY => WebViewError.MissingDependency,
@@ -42,7 +39,6 @@ pub fn mapWebviewError(err: anytype) WebViewError {
     };
 }
 
-/// Checks a webview operation result code and returns error if failed.
 pub fn checkError(code: c_int) WebViewError!void {
     if (code != lib_webview.WEBVIEW_ERROR_OK) {
         return mapWebviewError(code);

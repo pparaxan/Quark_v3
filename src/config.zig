@@ -19,26 +19,17 @@ pub const WindowHint = enum(c_uint) {
 /// Example:
 ///   const config = WindowConfig.init().withTitle("My App").withDimensions(1024, 768).withSizeHint(WindowHint.fixed_size);
 pub const WindowConfig = struct {
-    /// Window title displayed in the title bar
     title: [:0]const u8 = "Quark Application",
-    /// Initial window width in pixels
     width: u16 = 800,
-    /// Initial window height in pixels
     height: u16 = 600,
-    /// Resizing behavior hint for the window
     size_hint: WindowHint = .resizable,
-    /// Enable debug mode (inspect element)
     debug_mode: bool = false, // deprecate this? make it true when in debug mode but once you're building in release mode it goes to false auto..
 
     const Self = @This();
 
     /// Creates a new WindowConfig with default values.
     ///
-    /// Returns a WindowConfig instance with the defaults:
-    /// - Title: "Quark Application"
-    /// - Dimensions: 800x600
-    /// - Resizable window
-    /// - Debug mode disabled
+    /// Returns a WindowConfig instance with the default values.
     pub fn init() Self {
         return Self{};
     }

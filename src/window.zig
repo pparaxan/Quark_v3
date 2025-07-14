@@ -1,9 +1,9 @@
-//! Core window management and webview integration for Quark applications.
+//! The core window management and webview integration for Quark.
 //!
-//! This module provides the QuarkWindow struct, which encapsulates a webview
-//! instance with associated configuration, bridging, and lifecycle management.
-//! It handles the integration between the frontend and native backend.
-// ^?
+//! This module provides the QuarkWindow struct, which wraps a webview
+//! instance with the configuration values from WindowConfig, communication
+//! between the front and the backend via Q[uark]B[ridge], and virtual
+//! file system integration via Q[uark]V[irtual]F[ile]S[ystem].
 const std = @import("std");
 const webview = @import("webview");
 const config = @import("config.zig");
@@ -21,8 +21,7 @@ var global_gpa: std.heap.GeneralPurposeAllocator(.{
 }) = .{};
 
 /// QuarkWindow manages the complete lifecycle of a Quark application, including
-/// window (webview) creation, bridge between the back and fontend, virtual file
-/// system integration, and event loop execution.
+/// the webview creation, bridging between the front and backend, et al.
 pub const QuarkWindow = struct {
     handle: webview.webview_t,
     config: config.WindowConfig,
@@ -30,7 +29,7 @@ pub const QuarkWindow = struct {
 
     const Self = @This();
 
-    /// [..]
+    /// Creates a new instance with the specified configuration from WindowConfig.
     ///
     /// This function initializes the webview with the config from WindowConfig,
     /// initializes all of the window subsystems, and prepares the window for execution.
@@ -54,9 +53,9 @@ pub const QuarkWindow = struct {
 
     /// Initializes all window subsystems.
     ///
-    /// Sets up giving the window a title and size, sets up the virtual
-    /// file system, loads the main index.html from the src_quark folder,
-    /// and configures the frontend-backend bridge.
+    /// Sets up the window title and size, initializes the virtual file system,
+    /// loads the main index.html file from the src_quark folder, and configures
+    /// the front to backend bridge.
     fn initialize(self: *Self) WebViewError!void {
         self.setTitle() catch |err| @panic(@errorName(err));
         self.setSize() catch |err| @panic(@errorName(err));
@@ -65,9 +64,7 @@ pub const QuarkWindow = struct {
         self.setupBridge() catch |err| @panic(@errorName(err));
     }
 
-    /// Sets up the JavaScript-Zig bridge for frontend-backend communication.
-    ///
-    /// [..]
+    /// Sets up the front to backend communication.
     fn setupBridge(self: *Self) !void {
         const bridge_js = @embedFile("bridge/frontend/core.js");
         const null_terminated = try self.allocator.allocSentinel(u8, bridge_js.len, 0);
@@ -83,12 +80,13 @@ pub const QuarkWindow = struct {
         return errors.checkError(webview.webview_set_title(self.handle, self.config.title));
     }
 
-    /// Sets up the Quark Virtual File System, used for serving the frontend assets.
-    /// Read the README [here](src/vfs/README.md).
+    /// Sets up the Quark Virtual File System, used for serving the frontend assets
+    /// with the help of [binder](https://codeberg.org/pparaxan/binder). Read the
+    /// README [here](https://codeberg.org/pparaxan/Quark/src/branch/master/src/vfs/README.md).
     ///
-    /// Initializes the virtual file system and injects the necessary JavaScript
-    /// code to handle asset loading from the embedded frontend resources.
-    // Work on this
+    /// Initializes the virtual file system and injects JavaScript code
+    /// to handle asset loading from embedded frontend resources, converting
+    /// everything to data blobs.
     fn setupGVFS(self: *Self) !void {
         var vfs = try @import("vfs/backend/qvfs.zig").QuarkVirtualFileSystem.init(self.allocator);
         defer vfs.asset_registry.deinit();
@@ -103,11 +101,10 @@ pub const QuarkWindow = struct {
         try errors.checkError(webview.webview_init(self.handle, null_terminated.ptr));
     }
 
-    /// Loads the main index.html entry point to be used for the application.
+    /// Loads the main index.html file to be displayed in the application.
     ///
-    /// Retrieves the index.html file from the embedded resources library
-    /// "binder", get it's contents and set it as the webview's HTML content.
-    // reword this later?
+    /// Retrieves the index.html file from the application's binary via
+    /// [binder](https://codeberg.org/pparaxan/binder), get it's contents and set it as the webview's HTML content.
     fn loadEntryPoint(self: *Self) !void {
         const html_content = frontend.get("index.html") orelse return WebViewError.Unspecified;
         const null_terminated = try self.allocator.allocSentinel(u8, html_content.len, 0);
