@@ -22,9 +22,18 @@ pub fn init(allocator: std.mem.Allocator) void {
     responses.pending_responses = responses.ResponseQueue.init(allocator);
 }
 
-/// Deinitializes the response queue and frees associated memory.
-/// Should be called when the bridge is no longer needed.
+/// Deinitializes the response queue and command registry, frees
+/// associated memory. Should be called when the bridge is no
+/// longer needed.
 pub fn deinit() void {
+    if (api.global_commands) |*commands| {
+        for (commands.items) |entry| {
+            api.global_allocator.free(entry.name);
+        }
+        commands.deinit();
+        api.global_commands = null;
+    }
+
     if (responses.pending_responses) |*queue| {
         queue.deinit();
         responses.pending_responses = null;
