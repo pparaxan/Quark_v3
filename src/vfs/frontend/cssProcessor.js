@@ -33,22 +33,25 @@ function processCssStylesheet(stylesheet) {
 
 // Replaces `url(...)` in a CSS string with `url(blob:...)` if said asset exists in QVFS
 function replaceCssUrlReferences(cssValue) {
-  return cssValue.replace(/url\(['"]?([^'")]+)['"]?\)/g, function (fullMatch, assetUrl) {
-    const asset = window.__QUARK_VFS__[assetUrl];
-    if (asset) {
-      const byteCharacters = atob(asset.content);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+  return cssValue.replace(
+    /url\(['"]?([^'")]+)['"]?\)/g,
+    function (fullMatch, assetUrl) {
+      const asset = window.__QUARK_VFS__[assetUrl];
+      if (asset) {
+        const byteCharacters = atob(asset.content);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+
+        const byteArray = new Uint8Array(byteNumbers);
+        const assetBlob = new Blob([byteArray], { type: asset.mimeType });
+        const blobUrl = URL.createObjectURL(assetBlob);
+
+        return "url(" + blobUrl + ")";
       }
 
-      const byteArray = new Uint8Array(byteNumbers);
-      const assetBlob = new Blob([byteArray], { type: asset.mimeType });
-      const blobUrl = URL.createObjectURL(assetBlob);
-
-      return "url(" + blobUrl + ")";
-    }
-
-    return fullMatch;
-  });
+      return fullMatch;
+    },
+  );
 }

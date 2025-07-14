@@ -1,6 +1,5 @@
 // Wait until the DOM content is fully loaded before modifying elements
 document.addEventListener("DOMContentLoaded", function () {
-
   // Process all <link rel="stylesheet" href="..."> elements
   document
     .querySelectorAll('link[rel="stylesheet"][href]')

@@ -51,7 +51,7 @@
         headers: {
           "Content-Type": asset.mimeType,
         },
-      })
+      }),
     );
   }
 
