@@ -22,7 +22,7 @@ pub fn init(allocator: std.mem.Allocator) void {
     responses.pending_responses = responses.ResponseQueue.init(allocator);
 }
 
-/// Deinitializes the response queue and command registry, frees
+/// Deinitializes the response queue and command registry, freeing
 /// associated memory. Should be called when the bridge is no
 /// longer needed.
 pub fn deinit() void {
