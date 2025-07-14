@@ -27,10 +27,10 @@ pub fn platform(b: *std.Build, libquark: *std.Build.Step.Compile, lib_webview: *
         .freebsd => {
             libquark.addCSourceFile(.{ .file = lib_webview.path("core/src/webview.cc"), .flags = &.{"-std=c++11"} });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/cairo/" });
-            libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/gtk-3.0/" });
+            libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/gtk-4/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/glib-2.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/lib/glib-2.0/include/" });
-            libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/webkitgtk-4.1/" });
+            libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/webkitgtk-6.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/pango-1.0/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/harfbuzz/" });
             libquark.addIncludePath(.{ .cwd_relative = "/usr/local/include/gdk-pixbuf-2.0/" });
