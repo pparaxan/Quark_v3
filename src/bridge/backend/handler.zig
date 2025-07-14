@@ -124,6 +124,7 @@ fn handleCommand(root: std.json.Value, temp_allocator: std.mem.Allocator) void {
     };
 
     const result = handler.?(api.global_allocator, payload_json);
+    defer api.global_allocator.free(result);
 
     responses.sendSuccessfulResponse(id, result) catch |err| {
         std.log.err("Failed to send successful response: {}", .{err});
