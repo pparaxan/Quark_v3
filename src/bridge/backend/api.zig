@@ -1,6 +1,6 @@
-//! This module provides the fundamental bridge API for bidirectional communication
-//! in Quark applications. It manages command registration, execution, and event
-//! emission across the backend-frontend boundary.
+//! This module provides the fundamental bridge communication in Quark
+//! applications. It manages command registration, execution, and event
+//! emission across the front and backend boundary.
 
 const std = @import("std");
 const webview = @import("webview");

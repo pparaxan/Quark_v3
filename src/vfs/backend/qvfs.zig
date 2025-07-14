@@ -13,10 +13,8 @@ const frontend_modules = [_][]const u8{
     @embedFile("../frontend/cssProcessor.js"),
 };
 
-/// This struct provides a virtual in-memory file system that embeds
-/// static assets that's found via [binder](https://codeberg.org/pparaxan/binder)
-/// to be encoded into base64 encoded strings within a global
-/// JavaScript object `window.__QUARK_VFS__`.
+/// This struct helps embed assets that's found via the
+/// [binder](https://codeberg.org/pparaxan/binder) file.
 pub const QuarkVirtualFileSystem = struct {
     allocator: std.mem.Allocator,
     asset_registry: std.ArrayList(u8),
@@ -33,9 +31,10 @@ pub const QuarkVirtualFileSystem = struct {
 
     /// Generate JavaScript injection code that registers all frontend assets
     /// in the webview's global `window.__QUARK_VFS__` object.
+    /// https://codeberg.org/pparaxan/Quark/src/branch/master/src/vfs/frontend
     ///
     /// This method processes all frontend assets, encoding them as Base64
-    /// and creating a JavaScript object structure that can be injected
+    /// and creates a JavaScript object structure that can be injected
     /// into the WebView as URL blobs.
     pub fn generateInjectionCode(self: *Self) ![]u8 {
         for (frontend_modules) |module| {
@@ -50,11 +49,8 @@ pub const QuarkVirtualFileSystem = struct {
         return try self.allocator.dupe(u8, self.asset_registry.items);
     }
 
-    /// Register a single asset by encoding its content as Base64 and generating
+    /// Register a _single_ asset by encoding its content as Base64 and generating
     /// the corresponding JavaScript object entry.
-    ///
-    /// The generated code includes the content as a base64 string, its MIME type,
-    /// and the original content size.
     fn registerAssets(self: *Self, file_name: []const u8, content: []const u8) !void {
         const base64_data = try self.encodeBase64(content);
         defer self.allocator.free(base64_data);

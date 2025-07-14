@@ -10,8 +10,10 @@ const errors = @import("../../errors.zig");
 const WebViewError = errors.WebViewError;
 const api = @import("api.zig");
 
-/// Initializes the bridge handler. Sets up the global command registry
-/// and response queue required for bridge operation. Must be called before any bridge operations.
+/// Initializes the bridge handler.
+///
+/// Sets up the global command registry and response queue required
+/// for bridge operation. Must be called before any bridge operations.
 pub fn init(allocator: std.mem.Allocator) void {
     if (api.global_commands == null) {
         api.global_commands = std.ArrayList(api.CommandEntry).init(allocator);
@@ -31,7 +33,7 @@ pub fn deinit() void {
 
 /// [C] Callback function for handling bridge messages from the frontend.
 ///
-/// This is the main entry point for all frontend-to-backend communication.
+/// This is the main entry point for all front to backend communication.
 /// It receives raw JSON messages from the frontend, parses them, and routes
 /// them to the appropriate command handlers.
 pub fn bridgeCallback(_: [*c]const u8, req: [*c]const u8, arg: ?*anyopaque) callconv(.C) void {

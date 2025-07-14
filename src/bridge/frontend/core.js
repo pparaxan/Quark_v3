@@ -1,10 +1,3 @@
-/**
- * QB is a bidirectional communication layer that connects backends
- * coded in Zig to WebView powered frontends.
- *
- * @version 1.0.0
- */
-
 // Define the global Quark Bridge interface.
 window.__QUARK_BRIDGE__ = {
   /**

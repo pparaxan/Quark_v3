@@ -2,10 +2,10 @@
 
 ### `Quark Bridge`
 
-QB is a bidirectional communication layer that connects backends coded in Zig to WebView powered frontends. It provides a lightweight command/event system that allows the Zig side of things to:
+QB is a bidirectional communication layer that connects the backend to the frontend. It provides a lightweight command/event system that allows the Zig side of things to:
 
 - **Expose backend functions** that the frontend can call by name.
-- **Invoke frontend JavaScript functions** directly from Zig.
+- **Invoke frontend JavaScript functions** directly from the backend.
 - **Emit events** from the backend that the frontend can listen to.
 
 ---

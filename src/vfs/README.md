@@ -4,7 +4,7 @@
 
 <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript" target="_blank"><img src="https://img.shields.io/badge/made%20in-pure%20javascript-F7DF1E?style=for-the-badge&logoColor=white"/></a>
 
-QVFS is a module that creates a virtual filesystem inside the webview that intercepts asset requests and serves them from embedded data, eliminating the need for network access or disk I/O.
+QVFS is a module that creates a virtual filesystem inside the webview that intercepts asset requests and serves them from embedded data.
 
 - **Transparent Operation**: Works with standard HTML/CSS without changes.
 - **Zero Network Dependency**: All assets are loaded from in-memory blobs.
