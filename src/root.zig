@@ -28,6 +28,15 @@ pub fn executeWindow(window: *QuarkWindow) !void {
     return window.run();
 }
 
+/// Destroys a Quark window and cleans up all associated resources.
+///
+/// This function should be called when the window is no longer needed
+/// to ensure proper cleanup of the webview handle, bridge handlers,
+/// and memory allocations. Call this after the event loop has terminated.
+pub fn destroyWindow(window: *QuarkWindow) !void {
+    return window.destroy();
+}
+
 /// Registers a command handler for front to backend communication.
 ///
 /// This function allows the frontend to invoke backend functionality.

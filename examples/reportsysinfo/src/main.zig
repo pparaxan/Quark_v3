@@ -13,6 +13,7 @@ pub fn main() !void {
     var window = try libquark.createWindow(config);
     try libquark.registerCommand("reportSystemInfo", reportSystemInfo);
     try libquark.executeWindow(&window);
+    try libquark.destroyWindow(&window);
 }
 
 fn fetchDistroInfo() ![]const u8 {

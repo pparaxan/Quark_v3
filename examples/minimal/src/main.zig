@@ -10,4 +10,5 @@ pub fn main() !void {
 
     var window = try libquark.createWindow(config);
     try libquark.executeWindow(&window);
+    try libquark.destroyWindow(&window);
 }
