@@ -5,6 +5,7 @@
 
 <a href="https://codeberg.org/pparaxan/Quark/releases" target="_blank"><img src="https://img.shields.io/gitea/v/release/pparaxan/Quark?gitea_url=https%3A%2F%2Fcodeberg.org%2F&sort=semver&display_name=release&date_order_by=published_at&style=for-the-badge&logo=codeberg&logoColor=white&color=%232185D0"/></a>
 <a href="https://ziglang.org" target="_blank"><img src="https://img.shields.io/badge/zig%20version-v0.14.0+-F7A41D?style=for-the-badge&logo=zig&logoColor=white"/></a>
+<a href="https://rvlt.gg/KAXqcYXt" target="_blank"><img src="https://img.shields.io/badge/revolt%20server-join%20now-ff005c?style=for-the-badge&logo=revolt.chat&logoColor=white"/></a>
 
 Quark is a compact and efficient library designed for building scalable web applications.
 
