@@ -14,8 +14,6 @@ const bridge = @import("bridge/backend/api.zig");
 const bridge_handler = @import("bridge/backend/handler.zig");
 const api = @import("bridge/backend/api.zig");
 
-pub const CommandHandler = api.CommandHandler;
-
 var global_gpa = std.heap.DebugAllocator(.{
     .thread_safe = true,
 }).init;

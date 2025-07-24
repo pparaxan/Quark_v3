@@ -7,7 +7,6 @@ const std = @import("std");
 pub const WindowHint = enum(c_uint) {
     resizable = 0,
     min_size = 1,
-    // max_size = 2, // webkitgtk-6.0 doesn't support this.
     fixed_size = 3,
 };
 
