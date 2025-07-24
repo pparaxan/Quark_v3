@@ -16,9 +16,9 @@ const api = @import("bridge/backend/api.zig");
 
 pub const CommandHandler = api.CommandHandler;
 
-var global_gpa: std.heap.GeneralPurposeAllocator(.{
+var global_gpa = std.heap.DebugAllocator(.{
     .thread_safe = true,
-}) = .{};
+}).init;
 
 /// QuarkWindow manages the complete lifecycle of a Quark application, including
 /// the webview creation, bridging between the front and backend, et al.
