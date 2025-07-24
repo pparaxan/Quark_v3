@@ -36,7 +36,7 @@ pub const QuarkWindow = struct {
 
         bridge_handler.init(allocator);
 
-        const handle = webview.webview_create(@intFromBool(window_config.debug_mode), null);
+        const handle = webview.webview_create(@intFromBool(@import("builtin").mode == std.builtin.OptimizeMode.Debug), null);
         if (handle == null) return WebViewError.MissingDependency;
 
         var window = Self{

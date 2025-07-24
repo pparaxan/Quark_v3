@@ -22,7 +22,6 @@ pub const WindowConfig = struct {
     width: u16 = 800,
     height: u16 = 600,
     size_hint: WindowHint = .resizable,
-    debug_mode: bool = false, // deprecate this? make it true when in debug mode but once you're building in release mode it goes to false auto..
 
     const Self = @This();
 
@@ -59,15 +58,6 @@ pub const WindowConfig = struct {
     pub fn withSizeHint(self: Self, hint: WindowHint) Self {
         var config = self;
         config.size_hint = hint;
-        return config;
-    }
-
-    /// Enables or disables debug mode.
-    ///
-    /// This value shows developer tools and additional debugging information via `right-click > Inspect Element`.
-    pub fn withDebug(self: Self, enable: bool) Self {
-        var config = self;
-        config.debug_mode = enable;
         return config;
     }
 };

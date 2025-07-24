@@ -7,8 +7,7 @@ pub fn main() !void {
     const config = libquark.WindowConfig.init()
         .withTitle("Quark - reportsysinfo")
         .withDimensions(1280, 720)
-        .withSizeHint(libquark.WindowHint.min_size)
-        .withDebug(true);
+        .withSizeHint(libquark.WindowHint.min_size);
 
     var window = try libquark.createWindow(config);
     try libquark.registerCommand("reportSystemInfo", reportSystemInfo);
