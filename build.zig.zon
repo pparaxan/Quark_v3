@@ -1,6 +1,6 @@
 .{
     .name = .quark,
-    .version = "5.1.0",
+    .version = "5.0.0",
     .fingerprint = 0xd00d6c7f4552224e,
     .minimum_zig_version = "0.14.0",
     .dependencies = .{
