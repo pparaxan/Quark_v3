@@ -26,7 +26,7 @@ jobs:
           git clone --branch pages https://oauth2:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/pparaxan/Quark.git quark_pages
           rm -rf quark_pages/documentation/source/*
           cp -r docs/* quark_pages/documentation/source/
-          cd documentation/source/
+          cd quark_pages/documentation/source/
 
           COMMIT_MESSAGE=$(git -C .. log -1 --pretty=%B)
           COMMIT_MESSAGE_FALLBACK=$(date)
