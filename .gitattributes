@@ -1,7 +1,1 @@
-*.zig text eol=lf
-*.zon text eol=lf
-*.c text eol=lf
-*.h text eol=lf
-*.js text eol=lf
-*.html text eol=lf
-*.css text eol=lf
+* text eol=lf
