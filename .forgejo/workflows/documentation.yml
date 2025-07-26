@@ -1,0 +1,36 @@
+on:
+  push:
+    branches:
+      - "master"
+jobs:
+  build-srcdocs:
+    runs-on: codeberg-tiny
+    container:
+      image: "archlinux:base"
+    steps:
+      - name: Install dependencies
+        run: pacman -Syu zig git nodejs --noconfirm
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.CODEBERG_TOKEN }}
+          fetch-depth: 0
+      - name: Build documentation
+        run: zig build-lib -O ReleaseFast src/root.zig -femit-docs=zig-out/docs/
+      - name: Configure Git
+        run: |
+          git config --global user.name "Forgejo Actions"
+          git config --global user.email "john@example.com"
+      - name: Deploy to pages branch
+        run: |
+          git clone --branch pages https://oauth2:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/pparaxan/Quark.git quark_pages
+          rm -rf quark_pages/documentation/source/*
+          cp -r zig-out/docs/* quark_pages/documentation/source/
+          cd documentation/source/
+
+          COMMIT_MESSAGE=$(git -C .. log -1 --pretty=%B)
+          COMMIT_MESSAGE_FALLBACK=$(date)
+
+          git add .
+          git commit -m "$COMMIT_MESSAGE" -m "${CI_COMMIT_SHA}" || git commit -m "ERROR: Check the main branch" -m "$COMMIT_MESSAGE_FALLBACK"
+          git push
