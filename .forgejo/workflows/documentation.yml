@@ -16,7 +16,7 @@ jobs:
           token: ${{ secrets.CODEBERG_TOKEN }}
           fetch-depth: 0
       - name: Build documentation
-        run: zig build-lib -O ReleaseFast src/root.zig -femit-docs=zig-out/docs/
+        run: zig build-lib -O ReleaseFast src/root.zig -femit-docs
       - name: Configure Git
         run: |
           git config --global user.name "Forgejo Actions"
@@ -25,7 +25,7 @@ jobs:
         run: |
           git clone --branch pages https://oauth2:${{ secrets.CODEBERG_TOKEN }}@codeberg.org/pparaxan/Quark.git quark_pages
           rm -rf quark_pages/documentation/source/*
-          cp -r zig-out/docs/* quark_pages/documentation/source/
+          cp -r docs/* quark_pages/documentation/source/
           cd documentation/source/
 
           COMMIT_MESSAGE=$(git -C .. log -1 --pretty=%B)
